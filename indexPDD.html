@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polski dla dzieci 🇵🇱</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fdf6ec;
+      min-height: 100vh;
+      padding: 1rem;
+      color: #333;
+    }
+    .app { max-width: 600px; margin: 0 auto; }
+
+    .header {
+      background: #c0392b;
+      padding: 1.25rem 1.5rem;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 { font-family: 'Fredoka One', cursive; font-size: 28px; color: #fff; }
+    .header span { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 700; }
+
+    .nav { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .nav-btn {
+      flex: 1; padding: 10px 8px;
+      border: 2px solid #ddd; border-radius: 10px;
+      background: #fff; font-family: 'Nunito', sans-serif;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; color: #555;
+    }
+    .nav-btn.active { background: #c0392b; color: #fff; border-color: #c0392b; }
+    .nav-btn:hover:not(.active) { border-color: #c0392b; color: #c0392b; }
+
+    .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .topic-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 2px solid #eee; background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 12px;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; color: #666;
+    }
+    .topic-btn.active { background: #e67e22; color: #fff; border-color: #e67e22; }
+    .topic-btn:hover:not(.active) { border-color: #e67e22; }
+
+    /* FLASHCARDS */
+    .card-area { min-height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .flashcard {
+      width: 100%; background: #fff;
+      border-radius: 18px; border: 2px solid #f0f0f0;
+      padding: 2rem 1.5rem; text-align: center;
+      cursor: pointer; transition: transform 0.1s;
+      box-shadow: 0 4px 0 #e0e0e0;
+    }
+    .flashcard:hover { transform: translateY(-2px); }
+    .flashcard:active { transform: translateY(2px); box-shadow: 0 1px 0 #e0e0e0; }
+    .word-pl { font-family: 'Fredoka One', cursive; font-size: 52px; color: #c0392b; margin-bottom: 4px; }
+    .word-hint { font-size: 15px; color: #bbb; font-style: italic; margin-bottom: 1rem; }
+    .word-en { font-size: 24px; color: #27ae60; font-weight: 700; margin-top: 1rem; min-height: 34px; }
+    .flip-hint { font-size: 12px; color: #ccc; margin-top: 1rem; }
+    .card-nav { display: flex; align-items: center; justify-content: space-between; }
+    .card-nav button {
+      padding: 10px 22px; border-radius: 10px;
+      border: 2px solid #ddd; background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 14px;
+      font-weight: 700; cursor: pointer; transition: all 0.15s; color: #555;
+    }
+    .card-nav button:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
+    .card-counter { font-size: 14px; color: #999; font-weight: 600; }
+
+    /* QUIZ */
+    .quiz-score { display: flex; gap: 12px; justify-content: center; margin-bottom: 1.5rem; }
+    .score-pill { padding: 6px 18px; border-radius: 20px; font-size: 14px; font-weight: 700; }
+    .score-right { background: #eafaf1; color: #27ae60; }
+    .score-wrong { background: #fdedec; color: #e74c3c; }
+    .quiz-q { font-family: 'Fredoka One', cursive; font-size: 40px; color: #c0392b; text-align: center; margin-bottom: 6px; }
+    .quiz-sub { font-size: 14px; color: #bbb; text-align: center; margin-bottom: 1.5rem; font-style: italic; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+    .quiz-opt {
+      padding: 16px 10px; border: 2px solid #eee; border-radius: 12px;
+      background: #fff; font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      transition: all 0.15s; color: #444; text-align: center;
+    }
+    .quiz-opt:hover:not([disabled]) { border-color: #3498db; color: #3498db; }
+    .quiz-opt.correct { background: #27ae60; color: #fff; border-color: #27ae60; }
+    .quiz-opt.wrong { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+    .quiz-opt.reveal { background: #eafaf1; border-color: #27ae60; color: #27ae60; }
+    .quiz-next {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: #3498db; color: #fff; font-family: 'Fredoka One', cursive;
+      font-size: 22px; cursor: pointer; transition: background 0.15s; display: none;
+    }
+    .quiz-next:hover { background: #2980b9; }
+
+    /* MATCH */
+    .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+    .match-col-label { font-size: 12px; font-weight: 700; color: #bbb; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .match-col { display: flex; flex-direction: column; gap: 10px; }
+    .match-btn {
+      padding: 12px 10px; border: 2px solid #eee; border-radius: 10px;
+      background: #fff; font-family: 'Nunito', sans-serif;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.15s; color: #444; text-align: center; width: 100%;
+    }
+    .match-btn:hover:not([disabled]) { border-color: #9b59b6; color: #9b59b6; }
+    .match-btn.selected { border-color: #9b59b6; background: #9b59b6; color: #fff; }
+    .match-btn.matched { background: #27ae60; color: #fff; border-color: #27ae60; opacity: 0.7; cursor: default; }
+    .match-btn.wrong-shake { animation: shake 0.3s; border-color: #e74c3c; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .match-result {
+      text-align: center; padding: 1.5rem;
+      font-family: 'Fredoka One', cursive; font-size: 30px;
+      color: #27ae60; display: none;
+    }
+    .reset-btn {
+      margin-top: 1rem; width: 100%; padding: 10px;
+      border-radius: 10px; border: 2px solid #eee; background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 14px;
+      font-weight: 700; cursor: pointer; color: #999;
+    }
+    .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>Polski dla dzieci 🇵🇱</h1>
+    <span>Polish for kids</span>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="setMode('flash')">🃏 Flashcards</button>
+    <button class="nav-btn" onclick="setMode('quiz')">🧠 Quiz</button>
+    <button class="nav-btn" onclick="setMode('match')">🔗 Match</button>
+  </div>
+
+  <div class="topic-bar" id="topicBar"></div>
+
+  <!-- FLASHCARD MODE -->
+  <div id="flashMode" class="panel active">
+    <div class="card-area">
+      <div class="flashcard" onclick="flipCard()" id="flashcard">
+        <div class="word-pl" id="fPL">—</div>
+        <div class="word-hint" id="fHint"></div>
+        <div class="word-en" id="fEN"></div>
+        <div class="flip-hint" id="fFlipHint">tap to reveal</div>
+      </div>
+    </div>
+    <div class="card-nav">
+      <button onclick="prevCard()">← Back</button>
+      <span class="card-counter" id="cardCounter">1 / 1</span>
+      <button onclick="nextCard()">Next →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="quizMode" class="panel">
+    <div class="quiz-score">
+      <span class="score-pill score-right">✓ <span id="qRight">0</span></span>
+      <span class="score-pill score-wrong">✗ <span id="qWrong">0</span></span>
+    </div>
+    <div class="quiz-q" id="quizQ">—</div>
+    <div class="quiz-sub" id="quizSub"></div>
+    <div class="quiz-options" id="quizOpts"></div>
+    <button class="quiz-next" id="quizNext" onclick="nextQuiz()">Next question →</button>
+  </div>
+
+  <!-- MATCH MODE -->
+  <div id="matchMode" class="panel">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;">
+      <div class="match-col-label">Polish</div>
+      <div class="match-col-label">English</div>
+    </div>
+    <div class="match-grid" id="matchGrid"></div>
+    <div class="match-result" id="matchResult">Brawo! 🎉 All matched!</div>
+    <button class="reset-btn" onclick="resetMatch()">Shuffle new set</button>
+  </div>
+</div>
+
+<script>
+const vocab = {
+  greetings: [
+    {pl:"Cześć",en:"Hi / Hello",hint:"cheshch"},
+    {pl:"Dzień dobry",en:"Good morning",hint:"dyen DOH-bry"},
+    {pl:"Dobranoc",en:"Good night",hint:"doh-BRAH-nots"},
+    {pl:"Do widzenia",en:"Goodbye",hint:"do vee-DZEN-ya"},
+    {pl:"Dziękuję",en:"Thank you",hint:"dyen-KOO-yeh"},
+    {pl:"Proszę",en:"Please / Here you go",hint:"PROH-sheh"},
+    {pl:"Przepraszam",en:"Sorry / Excuse me",hint:"psheh-PRAH-shahm"},
+    {pl:"Tak",en:"Yes",hint:"tahk"},
+    {pl:"Nie",en:"No",hint:"nyeh"},
+  ],
+  numbers: [
+    {pl:"Jeden",en:"One",hint:"YEH-den"},
+    {pl:"Dwa",en:"Two",hint:"dvah"},
+    {pl:"Trzy",en:"Three",hint:"tshih"},
+    {pl:"Cztery",en:"Four",hint:"CHTE-ry"},
+    {pl:"Pięć",en:"Five",hint:"pyench"},
+    {pl:"Sześć",en:"Six",hint:"sheshch"},
+    {pl:"Siedem",en:"Seven",hint:"SHEH-dem"},
+    {pl:"Osiem",en:"Eight",hint:"OH-shyem"},
+    {pl:"Dziewięć",en:"Nine",hint:"djeh-VYENCH"},
+    {pl:"Dziesięć",en:"Ten",hint:"djeh-SHENCH"},
+  ],
+  colours: [
+    {pl:"Czerwony",en:"Red",hint:"cher-VOH-ny"},
+    {pl:"Niebieski",en:"Blue",hint:"nyeh-BYEH-skee"},
+    {pl:"Zielony",en:"Green",hint:"zheh-LOH-ny"},
+    {pl:"Żółty",en:"Yellow",hint:"ZHOOW-ty"},
+    {pl:"Czarny",en:"Black",hint:"CHAR-ny"},
+    {pl:"Biały",en:"White",hint:"BYAH-wy"},
+    {pl:"Różowy",en:"Pink",hint:"ROO-zhoh-vy"},
+    {pl:"Pomarańczowy",en:"Orange",hint:"po-ma-RAHN-choh-vy"},
+  ],
+  family: [
+    {pl:"Mama",en:"Mum",hint:"MAH-ma"},
+    {pl:"Tata",en:"Dad",hint:"TAH-ta"},
+    {pl:"Babcia",en:"Grandma",hint:"BAB-chya"},
+    {pl:"Dziadek",en:"Grandad",hint:"JA-deck"},
+    {pl:"Brat",en:"Brother",hint:"braht"},
+    {pl:"Siostra",en:"Sister",hint:"SHOS-tra"},
+    {pl:"Pies",en:"Dog",hint:"pyess"},
+    {pl:"Kot",en:"Cat",hint:"kot"},
+  ],
+  food: [
+    {pl:"Chleb",en:"Bread",hint:"hlep"},
+    {pl:"Mleko",en:"Milk",hint:"MLEH-ko"},
+    {pl:"Woda",en:"Water",hint:"VOH-da"},
+    {pl:"Jabłko",en:"Apple",hint:"YAB-ko"},
+    {pl:"Banan",en:"Banana",hint:"BAH-nan"},
+    {pl:"Zupa",en:"Soup",hint:"ZOO-pa"},
+    {pl:"Ciasto",en:"Cake",hint:"CHYAS-to"},
+    {pl:"Lody",en:"Ice cream",hint:"LOH-dy"},
+  ],
+};
+
+const topicLabels = {
+  greetings:"👋 Greetings",
+  numbers:"🔢 Numbers",
+  colours:"🎨 Colours",
+  family:"👨‍👩‍👧 Family",
+  food:"🍎 Food"
+};
+const topics = Object.keys(vocab);
+let currentTopic = 'greetings';
+let currentMode = 'flash';
+let cardIdx = 0;
+let cardFlipped = false;
+let qRight = 0, qWrong = 0;
+let quizAnswered = false;
+let quizPool = [];
+let matchSelected = null;
+let matchPool = [];
+let matchedCount = 0;
+
+function buildTopicBar() {
+  const bar = document.getElementById('topicBar');
+  bar.innerHTML = '';
+  topics.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
+    b.textContent = topicLabels[t];
+    b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
+    bar.appendChild(b);
+  });
+}
+
+function resetAll() {
+  cardIdx = 0; cardFlipped = false;
+  if (currentMode === 'flash') renderFlash();
+  if (currentMode === 'quiz') {
+    qRight = 0; qWrong = 0;
+    document.getElementById('qRight').textContent = 0;
+    document.getElementById('qWrong').textContent = 0;
+    quizPool = [];
+    nextQuiz();
+  }
+  if (currentMode === 'match') resetMatch();
+}
+
+function setMode(m) {
+  currentMode = m;
+  ['flash','quiz','match'].forEach((name, i) => {
+    document.getElementById(name + 'Mode').classList.toggle('active', name === m);
+    document.querySelectorAll('.nav-btn')[i].classList.toggle('active', name === m);
+  });
+  resetAll();
+}
+
+function renderFlash() {
+  const words = vocab[currentTopic];
+  const w = words[cardIdx];
+  document.getElementById('fPL').textContent = w.pl;
+  document.getElementById('fHint').textContent = '(' + w.hint + ')';
+  document.getElementById('fEN').textContent = '';
+  document.getElementById('fFlipHint').textContent = 'tap to reveal';
+  document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' / ' + words.length;
+  cardFlipped = false;
+}
+
+function flipCard() {
+  const w = vocab[currentTopic][cardIdx];
+  if (!cardFlipped) {
+    document.getElementById('fEN').textContent = w.en;
+    document.getElementById('fFlipHint').textContent = '';
+    cardFlipped = true;
+  } else {
+    document.getElementById('fEN').textContent = '';
+    document.getElementById('fFlipHint').textContent = 'tap to reveal';
+    cardFlipped = false;
+  }
+}
+function nextCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx + 1) % w.length; renderFlash(); }
+function prevCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx - 1 + w.length) % w.length; renderFlash(); }
+
+function shuffle(a) {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function nextQuiz() {
+  quizAnswered = false;
+  document.getElementById('quizNext').style.display = 'none';
+  const words = vocab[currentTopic];
+  if (quizPool.length === 0) quizPool = shuffle([...words]);
+  const current = quizPool.pop();
+  const dirPLtoEN = Math.random() > 0.5;
+  document.getElementById('quizQ').textContent = dirPLtoEN ? current.pl : current.en;
+  document.getElementById('quizSub').textContent = dirPLtoEN ? '(' + current.hint + ')' : 'What is this in Polish?';
+  const wrongs = shuffle(words.filter(w => w.pl !== current.pl)).slice(0, 3);
+  const opts = shuffle([current, ...wrongs]);
+  const container = document.getElementById('quizOpts');
+  container.innerHTML = '';
+  opts.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = dirPLtoEN ? opt.en : opt.pl;
+    b.onclick = () => {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const isRight = opt.pl === current.pl;
+      if (isRight) {
+        b.classList.add('correct'); qRight++;
+        document.getElementById('qRight').textContent = qRight;
+      } else {
+        b.classList.add('wrong'); qWrong++;
+        document.getElementById('qWrong').textContent = qWrong;
+        Array.from(container.children).forEach(btn => {
+          const label = dirPLtoEN ? current.en : current.pl;
+          if (btn.textContent === label) btn.classList.add('reveal');
+        });
+      }
+      Array.from(container.children).forEach(btn => btn.disabled = true);
+      document.getElementById('quizNext').style.display = 'block';
+    };
+    container.appendChild(b);
+  });
+}
+
+function resetMatch() {
+  matchSelected = null; matchedCount = 0;
+  const words = vocab[currentTopic];
+  matchPool = shuffle([...words]).slice(0, 5);
+  const polishItems = shuffle([...matchPool]);
+  const engItems = shuffle([...matchPool]);
+  const grid = document.getElementById('matchGrid');
+  grid.innerHTML = '';
+  document.getElementById('matchResult').style.display = 'none';
+  const polishCol = document.createElement('div');
+  polishCol.className = 'match-col';
+  const engCol = document.createElement('div');
+  engCol.className = 'match-col';
+
+  polishItems.forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'match-btn';
+    b.textContent = w.pl;
+    b.dataset.pl = w.pl;
+    b.dataset.side = 'pl';
+    b.onclick = () => handleMatch(b);
+    polishCol.appendChild(b);
+  });
+  engItems.forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'match-btn';
+    b.textContent = w.en;
+    b.dataset.pl = w.pl;
+    b.dataset.side = 'en';
+    b.onclick = () => handleMatch(b);
+    engCol.appendChild(b);
+  });
+  grid.appendChild(polishCol);
+  grid.appendChild(engCol);
+}
+
+function handleMatch(btn) {
+  if (btn.classList.contains('matched')) return;
+  if (!matchSelected) {
+    matchSelected = btn;
+    btn.classList.add('selected');
+  } else {
+    if (matchSelected === btn) {
+      btn.classList.remove('selected'); matchSelected = null; return;
+    }
+    if (matchSelected.dataset.side === btn.dataset.side) {
+      matchSelected.classList.remove('selected');
+      matchSelected = btn; btn.classList.add('selected'); return;
+    }
+    const a = matchSelected;
+    if (a.dataset.pl === btn.dataset.pl) {
+      a.classList.remove('selected'); a.classList.add('matched'); a.disabled = true;
+      btn.classList.add('matched'); btn.disabled = true;
+      matchedCount++;
+      if (matchedCount === matchPool.length) document.getElementById('matchResult').style.display = 'block';
+    } else {
+      a.classList.add('wrong-shake'); btn.classList.add('wrong-shake');
+      setTimeout(() => { a.classList.remove('wrong-shake','selected'); btn.classList.remove('wrong-shake'); }, 400);
+    }
+    matchSelected = null;
+  }
+}
+
+buildTopicBar();
+renderFlash();
+</script>
+</body>
+</html>
