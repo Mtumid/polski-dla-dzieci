@@ -28,26 +28,28 @@
     .header h1 { font-family: 'Fredoka One', cursive; font-size: 28px; color: #fff; }
     .header span { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 700; }
 
-    .nav { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .nav { display: flex; gap: 6px; margin-bottom: 1rem; }
     .nav-btn {
-      flex: 1; padding: 10px 8px;
+      flex: 1; padding: 10px 4px;
       border: 2px solid #ddd; border-radius: 10px;
       background: #fff; font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700; cursor: pointer;
+      font-size: 12px; font-weight: 700; cursor: pointer;
       transition: all 0.2s; color: #555;
     }
     .nav-btn.active { background: #c0392b; color: #fff; border-color: #c0392b; }
     .nav-btn:hover:not(.active) { border-color: #c0392b; color: #c0392b; }
 
-    .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .topic-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
     .topic-btn {
-      padding: 6px 14px; border-radius: 20px;
+      padding: 5px 11px; border-radius: 20px;
       border: 2px solid #eee; background: #fff;
-      font-family: 'Nunito', sans-serif; font-size: 12px;
+      font-family: 'Nunito', sans-serif; font-size: 11px;
       font-weight: 700; cursor: pointer; transition: all 0.2s; color: #666;
+      white-space: nowrap;
     }
     .topic-btn.active { background: #e67e22; color: #fff; border-color: #e67e22; }
     .topic-btn:hover:not(.active) { border-color: #e67e22; }
+    .topic-progress { opacity: 0.75; }
 
     /* FLASHCARDS */
     .card-area { min-height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
@@ -57,6 +59,7 @@
       padding: 2rem 1.5rem; text-align: center;
       cursor: pointer; transition: transform 0.1s;
       box-shadow: 0 4px 0 #e0e0e0;
+      position: relative;
     }
     .flashcard:hover { transform: translateY(-2px); }
     .flashcard:active { transform: translateY(2px); box-shadow: 0 1px 0 #e0e0e0; }
@@ -64,7 +67,13 @@
     .word-hint { font-size: 15px; color: #bbb; font-style: italic; margin-bottom: 1rem; }
     .word-en { font-size: 24px; color: #27ae60; font-weight: 700; margin-top: 1rem; min-height: 34px; }
     .flip-hint { font-size: 12px; color: #ccc; margin-top: 1rem; }
-    .card-nav { display: flex; align-items: center; justify-content: space-between; }
+    .mastered-star {
+      position: absolute; top: 12px; right: 14px;
+      font-size: 22px; opacity: 0.15; transition: opacity 0.2s;
+    }
+    .mastered-star.on { opacity: 1; }
+
+    .card-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .card-nav button {
       padding: 10px 22px; border-radius: 10px;
       border: 2px solid #ddd; background: #fff;
@@ -73,6 +82,15 @@
     }
     .card-nav button:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
     .card-counter { font-size: 14px; color: #999; font-weight: 600; }
+
+    .got-it-btn {
+      width: 100%; padding: 12px; border-radius: 12px;
+      border: 2px solid #eee; background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 15px;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; color: #888;
+    }
+    .got-it-btn:hover { border-color: #f39c12; color: #f39c12; }
+    .got-it-btn.on { background: #fef9e7; border-color: #f39c12; color: #e67e22; }
 
     /* QUIZ */
     .quiz-score { display: flex; gap: 12px; justify-content: center; margin-bottom: 1.5rem; }
@@ -92,15 +110,14 @@
     .quiz-opt.correct { background: #27ae60; color: #fff; border-color: #27ae60; }
     .quiz-opt.wrong { background: #e74c3c; color: #fff; border-color: #e74c3c; }
     .quiz-opt.reveal { background: #eafaf1; border-color: #27ae60; color: #27ae60; }
-    .quiz-next {
+    .next-btn {
       width: 100%; padding: 14px; border-radius: 12px; border: none;
       background: #3498db; color: #fff; font-family: 'Fredoka One', cursive;
       font-size: 22px; cursor: pointer; transition: background 0.15s; display: none;
     }
-    .quiz-next:hover { background: #2980b9; }
+    .next-btn:hover { background: #2980b9; }
 
     /* MATCH */
-    .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
     .match-col-label { font-size: 12px; font-weight: 700; color: #bbb; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
     .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .match-col { display: flex; flex-direction: column; gap: 10px; }
@@ -132,6 +149,52 @@
     }
     .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
 
+    /* SCRAMBLE */
+    .scram-prompt {
+      font-family: 'Fredoka One', cursive; font-size: 38px;
+      color: #c0392b; text-align: center; margin-bottom: 4px;
+    }
+    .scram-sub {
+      font-size: 14px; color: #bbb; text-align: center;
+      margin-bottom: 1.25rem; font-style: italic;
+    }
+    .scram-answer {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      justify-content: center; margin-bottom: 1.25rem;
+      min-height: 56px; align-items: center;
+    }
+    .scram-slot {
+      width: 42px; height: 50px; border-radius: 10px;
+      border: 2px dashed #ddd; background: #fafafa;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive; font-size: 20px;
+      color: #c0392b; transition: all 0.15s;
+    }
+    .scram-slot.filled { border-style: solid; border-color: #c0392b; background: #fff5f5; cursor: pointer; }
+    .scram-slot.filled:hover { background: #fde8e8; }
+    .scram-slot.correct { background: #27ae60; border-color: #27ae60; color: #fff; cursor: default; }
+    .scram-slot.wrong-col { background: #e74c3c; border-color: #e74c3c; color: #fff; cursor: default; }
+
+    .scram-bank {
+      display: flex; flex-wrap: wrap; gap: 7px;
+      justify-content: center; margin-bottom: 1rem; min-height: 56px;
+    }
+    .scram-tile {
+      width: 42px; height: 50px; border-radius: 10px;
+      border: 2px solid #3498db; background: #ebf5fb;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive; font-size: 20px;
+      color: #2980b9; cursor: pointer; transition: all 0.15s;
+      user-select: none;
+    }
+    .scram-tile:hover { background: #3498db; color: #fff; transform: translateY(-2px); }
+    .scram-tile.used { opacity: 0.18; cursor: default; pointer-events: none; }
+
+    .scram-feedback {
+      text-align: center; font-family: 'Fredoka One', cursive;
+      font-size: 26px; min-height: 38px; margin-bottom: 0.5rem;
+    }
+
     .panel { display: none; }
     .panel.active { display: block; }
   </style>
@@ -144,9 +207,10 @@
   </div>
 
   <div class="nav">
-    <button class="nav-btn active" onclick="setMode('flash')">🃏 Flashcards</button>
+    <button class="nav-btn active" onclick="setMode('flash')">🃏 Cards</button>
     <button class="nav-btn" onclick="setMode('quiz')">🧠 Quiz</button>
     <button class="nav-btn" onclick="setMode('match')">🔗 Match</button>
+    <button class="nav-btn" onclick="setMode('scram')">🧩 Scramble</button>
   </div>
 
   <div class="topic-bar" id="topicBar"></div>
@@ -155,6 +219,7 @@
   <div id="flashMode" class="panel active">
     <div class="card-area">
       <div class="flashcard" onclick="flipCard()" id="flashcard">
+        <div class="mastered-star" id="masteredStar">⭐</div>
         <div class="word-pl" id="fPL">—</div>
         <div class="word-hint" id="fHint"></div>
         <div class="word-en" id="fEN"></div>
@@ -166,6 +231,7 @@
       <span class="card-counter" id="cardCounter">1 / 1</span>
       <button onclick="nextCard()">Next →</button>
     </div>
+    <button class="got-it-btn" id="gotItBtn" onclick="toggleGotIt()">⭐ Mark as learned</button>
   </div>
 
   <!-- QUIZ MODE -->
@@ -177,7 +243,7 @@
     <div class="quiz-q" id="quizQ">—</div>
     <div class="quiz-sub" id="quizSub"></div>
     <div class="quiz-options" id="quizOpts"></div>
-    <button class="quiz-next" id="quizNext" onclick="nextQuiz()">Next question →</button>
+    <button class="next-btn" id="quizNext" onclick="nextQuiz()">Next question →</button>
   </div>
 
   <!-- MATCH MODE -->
@@ -189,6 +255,20 @@
     <div class="match-grid" id="matchGrid"></div>
     <div class="match-result" id="matchResult">Brawo! 🎉 All matched!</div>
     <button class="reset-btn" onclick="resetMatch()">Shuffle new set</button>
+  </div>
+
+  <!-- SCRAMBLE MODE -->
+  <div id="scramMode" class="panel">
+    <div class="quiz-score">
+      <span class="score-pill score-right">✓ <span id="sRight">0</span></span>
+      <span class="score-pill score-wrong">✗ <span id="sWrong">0</span></span>
+    </div>
+    <div class="scram-prompt" id="scramPrompt">—</div>
+    <div class="scram-sub" id="scramSub">Spell the Polish word</div>
+    <div class="scram-answer" id="scramAnswer"></div>
+    <div class="scram-bank" id="scramBank"></div>
+    <div class="scram-feedback" id="scramFeedback"></div>
+    <button class="next-btn" id="scramNext" onclick="nextScramble()">Next word →</button>
   </div>
 </div>
 
@@ -247,34 +327,122 @@ const vocab = {
     {pl:"Ciasto",en:"Cake",hint:"CHYAS-to"},
     {pl:"Lody",en:"Ice cream",hint:"LOH-dy"},
   ],
+  animals: [
+    {pl:"Kot",en:"Cat",hint:"kot"},
+    {pl:"Pies",en:"Dog",hint:"pyess"},
+    {pl:"Koń",en:"Horse",hint:"kon'"},
+    {pl:"Ptak",en:"Bird",hint:"ptak"},
+    {pl:"Ryba",en:"Fish",hint:"RYH-ba"},
+    {pl:"Królik",en:"Rabbit",hint:"KROO-leek"},
+    {pl:"Mysz",en:"Mouse",hint:"mysh"},
+    {pl:"Żaba",en:"Frog",hint:"ZHA-ba"},
+    {pl:"Świnia",en:"Pig",hint:"SHVEE-nya"},
+    {pl:"Krowa",en:"Cow",hint:"KROH-va"},
+  ],
+  school: [
+    {pl:"Książka",en:"Book",hint:"KSYONZH-ka"},
+    {pl:"Ołówek",en:"Pencil",hint:"o-WOO-vek"},
+    {pl:"Długopis",en:"Pen",hint:"dwoo-GOH-pees"},
+    {pl:"Biurko",en:"Desk",hint:"BYOOR-ko"},
+    {pl:"Nauczyciel",en:"Teacher",hint:"na-oo-CHY-chyel"},
+    {pl:"Tornister",en:"School bag",hint:"tor-NEES-ter"},
+    {pl:"Linijka",en:"Ruler",hint:"lee-NEE-yka"},
+    {pl:"Klasa",en:"Class / Classroom",hint:"KLAH-sa"},
+  ],
+  clothes: [
+    {pl:"Koszula",en:"Shirt",hint:"ko-SHOO-la"},
+    {pl:"Spodnie",en:"Trousers",hint:"SPOD-nyeh"},
+    {pl:"Sukienka",en:"Dress",hint:"soo-KYEN-ka"},
+    {pl:"Czapka",en:"Hat",hint:"CHAP-ka"},
+    {pl:"Buty",en:"Shoes",hint:"BOO-ty"},
+    {pl:"Skarpetki",en:"Socks",hint:"skar-PET-kee"},
+    {pl:"Kurtka",en:"Jacket",hint:"KOORT-ka"},
+    {pl:"Rękawiczki",en:"Gloves",hint:"ren-ka-VEECH-kee"},
+  ],
+  weather: [
+    {pl:"Słońce",en:"Sun",hint:"SWON-tseh"},
+    {pl:"Deszcz",en:"Rain",hint:"deshch"},
+    {pl:"Śnieg",en:"Snow",hint:"shnyeg"},
+    {pl:"Wiatr",en:"Wind",hint:"VYATR"},
+    {pl:"Ciepło",en:"Warm",hint:"CHYEP-wo"},
+    {pl:"Zimno",en:"Cold",hint:"ZEEM-no"},
+    {pl:"Chmura",en:"Cloud",hint:"HMOO-ra"},
+    {pl:"Poniedziałek",en:"Monday",hint:"po-nyeh-DJA-wek"},
+    {pl:"Wtorek",en:"Tuesday",hint:"VTOH-rek"},
+    {pl:"Środa",en:"Wednesday",hint:"SHROH-da"},
+    {pl:"Czwartek",en:"Thursday",hint:"CHVAR-tek"},
+    {pl:"Piątek",en:"Friday",hint:"PYON-tek"},
+    {pl:"Sobota",en:"Saturday",hint:"so-BOH-ta"},
+    {pl:"Niedziela",en:"Sunday",hint:"nyeh-DJEH-la"},
+  ],
 };
 
 const topicLabels = {
-  greetings:"👋 Greetings",
-  numbers:"🔢 Numbers",
-  colours:"🎨 Colours",
-  family:"👨‍👩‍👧 Family",
-  food:"🍎 Food"
+  greetings: "👋 Greetings",
+  numbers:   "🔢 Numbers",
+  colours:   "🎨 Colours",
+  family:    "👨‍👩‍👧 Family",
+  food:      "🍎 Food",
+  animals:   "🐾 Animals",
+  school:    "🏫 School",
+  clothes:   "👕 Clothes",
+  weather:   "🌦 Weather & Days",
 };
+
 const topics = Object.keys(vocab);
 let currentTopic = 'greetings';
 let currentMode = 'flash';
+
+// Flashcard
 let cardIdx = 0;
 let cardFlipped = false;
+
+// Quiz
 let qRight = 0, qWrong = 0;
 let quizAnswered = false;
 let quizPool = [];
+
+// Match
 let matchSelected = null;
 let matchPool = [];
 let matchedCount = 0;
+
+// Scramble
+let scramPool = [];
+let scramWord = null;
+let scramLetters = [];  // [{char, id}] shuffled
+let scramAnswer = [];   // ordered list of ids placed by user
+let scramAnswered = false;
+let scramRight = 0, scramWrong = 0;
+
+// Progress tracking (persisted in localStorage)
+let mastered = {};
+try { mastered = JSON.parse(localStorage.getItem('polski_mastered') || '{}'); } catch(e) {}
+
+function saveMastered() {
+  try { localStorage.setItem('polski_mastered', JSON.stringify(mastered)); } catch(e) {}
+}
+function isMastered(topic, pl) { return !!(mastered[topic] && mastered[topic][pl]); }
+function setMastered(topic, pl, val) {
+  if (!mastered[topic]) mastered[topic] = {};
+  if (val) mastered[topic][pl] = true;
+  else delete mastered[topic][pl];
+  saveMastered();
+}
+function masteredCount(topic) {
+  return mastered[topic] ? Object.keys(mastered[topic]).length : 0;
+}
 
 function buildTopicBar() {
   const bar = document.getElementById('topicBar');
   bar.innerHTML = '';
   topics.forEach(t => {
+    const total = vocab[t].length;
+    const done = masteredCount(t);
     const b = document.createElement('button');
     b.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
-    b.textContent = topicLabels[t];
+    b.innerHTML = topicLabels[t]
+      + (done > 0 ? ` <span class="topic-progress">${done}/${total}</span>` : '');
     b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
     bar.appendChild(b);
   });
@@ -291,17 +459,25 @@ function resetAll() {
     nextQuiz();
   }
   if (currentMode === 'match') resetMatch();
+  if (currentMode === 'scram') {
+    scramRight = 0; scramWrong = 0;
+    document.getElementById('sRight').textContent = 0;
+    document.getElementById('sWrong').textContent = 0;
+    scramPool = [];
+    nextScramble();
+  }
 }
 
 function setMode(m) {
   currentMode = m;
-  ['flash','quiz','match'].forEach((name, i) => {
+  ['flash','quiz','match','scram'].forEach((name, i) => {
     document.getElementById(name + 'Mode').classList.toggle('active', name === m);
     document.querySelectorAll('.nav-btn')[i].classList.toggle('active', name === m);
   });
   resetAll();
 }
 
+// --- FLASHCARDS ---
 function renderFlash() {
   const words = vocab[currentTopic];
   const w = words[cardIdx];
@@ -311,6 +487,26 @@ function renderFlash() {
   document.getElementById('fFlipHint').textContent = 'tap to reveal';
   document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' / ' + words.length;
   cardFlipped = false;
+  updateGotItBtn();
+}
+
+function updateGotItBtn() {
+  const w = vocab[currentTopic][cardIdx];
+  const m = isMastered(currentTopic, w.pl);
+  const btn = document.getElementById('gotItBtn');
+  const star = document.getElementById('masteredStar');
+  btn.textContent = m ? '⭐ Learned! (tap to undo)' : '⭐ Mark as learned';
+  btn.className = 'got-it-btn' + (m ? ' on' : '');
+  star.className = 'mastered-star' + (m ? ' on' : '');
+}
+
+function toggleGotIt() {
+  const w = vocab[currentTopic][cardIdx];
+  const wasLearned = isMastered(currentTopic, w.pl);
+  setMastered(currentTopic, w.pl, !wasLearned);
+  updateGotItBtn();
+  buildTopicBar();
+  if (!wasLearned) setTimeout(() => nextCard(), 350);
 }
 
 function flipCard() {
@@ -328,6 +524,7 @@ function flipCard() {
 function nextCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx + 1) % w.length; renderFlash(); }
 function prevCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx - 1 + w.length) % w.length; renderFlash(); }
 
+// --- SHUFFLE ---
 function shuffle(a) {
   const arr = [...a];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -337,6 +534,7 @@ function shuffle(a) {
   return arr;
 }
 
+// --- QUIZ ---
 function nextQuiz() {
   quizAnswered = false;
   document.getElementById('quizNext').style.display = 'none';
@@ -365,8 +563,7 @@ function nextQuiz() {
         b.classList.add('wrong'); qWrong++;
         document.getElementById('qWrong').textContent = qWrong;
         Array.from(container.children).forEach(btn => {
-          const label = dirPLtoEN ? current.en : current.pl;
-          if (btn.textContent === label) btn.classList.add('reveal');
+          if (btn.textContent === (dirPLtoEN ? current.en : current.pl)) btn.classList.add('reveal');
         });
       }
       Array.from(container.children).forEach(btn => btn.disabled = true);
@@ -376,6 +573,7 @@ function nextQuiz() {
   });
 }
 
+// --- MATCH ---
 function resetMatch() {
   matchSelected = null; matchedCount = 0;
   const words = vocab[currentTopic];
@@ -389,7 +587,6 @@ function resetMatch() {
   polishCol.className = 'match-col';
   const engCol = document.createElement('div');
   engCol.className = 'match-col';
-
   polishItems.forEach(w => {
     const b = document.createElement('button');
     b.className = 'match-btn';
@@ -437,6 +634,104 @@ function handleMatch(btn) {
     }
     matchSelected = null;
   }
+}
+
+// --- SCRAMBLE ---
+function nextScramble() {
+  scramAnswered = false;
+  document.getElementById('scramNext').style.display = 'none';
+  document.getElementById('scramFeedback').textContent = '';
+
+  // Skip multi-word phrases; fall back to all words if topic is all multi-word
+  const allWords = vocab[currentTopic];
+  const eligible = allWords.filter(w => !w.pl.includes(' '));
+  const words = eligible.length > 0 ? eligible : allWords;
+
+  if (scramPool.length === 0) scramPool = shuffle([...words]);
+  scramWord = scramPool.pop();
+
+  document.getElementById('scramPrompt').textContent = scramWord.en;
+  document.getElementById('scramSub').textContent = 'Spell the Polish word';
+
+  // Build shuffled letter tiles, ensuring the order differs from the answer
+  const chars = [...scramWord.pl];
+  scramLetters = chars.map((char, id) => ({char, id}));
+  let attempts = 0;
+  do {
+    scramLetters = shuffle(scramLetters);
+    attempts++;
+  } while (attempts < 20 && scramLetters.map(l => l.char).join('') === scramWord.pl);
+
+  scramAnswer = [];
+  renderScramble();
+}
+
+function renderScramble() {
+  const chars = [...scramWord.pl];
+
+  // Answer slots
+  const answerDiv = document.getElementById('scramAnswer');
+  answerDiv.innerHTML = '';
+  chars.forEach((_, pos) => {
+    const slot = document.createElement('div');
+    const filled = pos < scramAnswer.length;
+    slot.className = 'scram-slot' + (filled ? ' filled' : '');
+    if (filled) {
+      slot.textContent = scramLetters.find(l => l.id === scramAnswer[pos]).char;
+      if (!scramAnswered) slot.onclick = () => removeFromAnswer(pos);
+    }
+    answerDiv.appendChild(slot);
+  });
+
+  // Letter bank
+  const bankDiv = document.getElementById('scramBank');
+  bankDiv.innerHTML = '';
+  scramLetters.forEach(letter => {
+    const tile = document.createElement('div');
+    tile.className = 'scram-tile' + (scramAnswer.includes(letter.id) ? ' used' : '');
+    tile.textContent = letter.char;
+    tile.onclick = () => addToAnswer(letter.id);
+    bankDiv.appendChild(tile);
+  });
+}
+
+function addToAnswer(id) {
+  if (scramAnswered || scramAnswer.includes(id)) return;
+  scramAnswer.push(id);
+  renderScramble();
+  if (scramAnswer.length === [...scramWord.pl].length) checkScramble();
+}
+
+function removeFromAnswer(pos) {
+  if (scramAnswered) return;
+  scramAnswer.splice(pos, 1);
+  renderScramble();
+}
+
+function checkScramble() {
+  scramAnswered = true;
+  const typed = scramAnswer.map(id => scramLetters.find(l => l.id === id).char).join('');
+  const correct = typed === scramWord.pl;
+
+  const slots = document.getElementById('scramAnswer').querySelectorAll('.scram-slot');
+  slots.forEach(slot => {
+    slot.classList.add(correct ? 'correct' : 'wrong-col');
+    slot.onclick = null;
+  });
+
+  const fb = document.getElementById('scramFeedback');
+  if (correct) {
+    fb.textContent = 'Brawo! 🎉';
+    fb.style.color = '#27ae60';
+    scramRight++;
+    document.getElementById('sRight').textContent = scramRight;
+  } else {
+    fb.textContent = '✗  ' + scramWord.pl;
+    fb.style.color = '#e74c3c';
+    scramWrong++;
+    document.getElementById('sWrong').textContent = scramWrong;
+  }
+  document.getElementById('scramNext').style.display = 'block';
 }
 
 buildTopicBar();
