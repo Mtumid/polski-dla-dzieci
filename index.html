@@ -16,38 +16,89 @@
     }
     .app { max-width: 600px; margin: 0 auto; }
 
+    /* HEADER */
     .header {
-      background: #c0392b;
+      background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
       padding: 1.25rem 1.5rem;
       border-radius: 16px;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .header h1 { font-family: 'Fredoka One', cursive; font-size: 28px; color: #fff; }
-    .header span { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 700; }
+    .header-sub { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 700; margin-top: 2px; }
 
-    .nav { display: flex; gap: 8px; margin-bottom: 1rem; }
+    /* STATS BAR */
+    .stats-bar {
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid #f0f0f0;
+    }
+    .level-badge {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: #fff;
+      border-radius: 8px;
+      padding: 5px 11px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .xp-bar-wrap { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .xp-label { display: flex; justify-content: space-between; font-size: 10px; color: #bbb; font-weight: 700; }
+    .xp-bar { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+    .xp-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f39c12, #f1c40f);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+      min-width: 3px;
+    }
+    .streak-badge { white-space: nowrap; font-size: 14px; font-weight: 700; color: #e67e22; }
+
+    /* NAV */
+    .nav { display: flex; gap: 5px; margin-bottom: 0.75rem; }
     .nav-btn {
-      flex: 1; padding: 10px 8px;
+      flex: 1; padding: 10px 4px;
       border: 2px solid #ddd; border-radius: 10px;
       background: #fff; font-family: 'Nunito', sans-serif;
-      font-size: 13px; font-weight: 700; cursor: pointer;
+      font-size: 11px; font-weight: 700; cursor: pointer;
       transition: all 0.2s; color: #555;
     }
     .nav-btn.active { background: #c0392b; color: #fff; border-color: #c0392b; }
     .nav-btn:hover:not(.active) { border-color: #c0392b; color: #c0392b; }
 
-    .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+    /* TOPIC BAR */
+    .topic-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
     .topic-btn {
-      padding: 6px 14px; border-radius: 20px;
-      border: 2px solid #eee; background: #fff;
-      font-family: 'Nunito', sans-serif; font-size: 12px;
-      font-weight: 700; cursor: pointer; transition: all 0.2s; color: #666;
+      padding: 6px 10px;
+      border-radius: 14px;
+      border: 2px solid #eee;
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #666;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 72px;
     }
     .topic-btn.active { background: #e67e22; color: #fff; border-color: #e67e22; }
+    .topic-btn.complete:not(.active) { border-color: #27ae60; color: #27ae60; }
     .topic-btn:hover:not(.active) { border-color: #e67e22; }
+    .topic-btn-text { font-size: 11px; display: flex; justify-content: space-between; align-items: center; gap: 3px; }
+    .topic-prog-count { font-size: 9px; opacity: 0.8; }
+    .topic-mini-bar { height: 3px; border-radius: 2px; background: rgba(0,0,0,0.08); overflow: hidden; }
+    .topic-btn.active .topic-mini-bar { background: rgba(255,255,255,0.3); }
+    .topic-mini-fill { height: 100%; border-radius: 2px; background: currentColor; transition: width 0.4s; }
 
     /* FLASHCARDS */
     .card-area { min-height: 260px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
@@ -57,6 +108,7 @@
       padding: 2rem 1.5rem; text-align: center;
       cursor: pointer; transition: transform 0.1s;
       box-shadow: 0 4px 0 #e0e0e0;
+      position: relative;
     }
     .flashcard:hover { transform: translateY(-2px); }
     .flashcard:active { transform: translateY(2px); box-shadow: 0 1px 0 #e0e0e0; }
@@ -64,7 +116,10 @@
     .word-hint { font-size: 15px; color: #bbb; font-style: italic; margin-bottom: 1rem; }
     .word-en { font-size: 24px; color: #27ae60; font-weight: 700; margin-top: 1rem; min-height: 34px; }
     .flip-hint { font-size: 12px; color: #ccc; margin-top: 1rem; }
-    .card-nav { display: flex; align-items: center; justify-content: space-between; }
+    .mastered-star { position: absolute; top: 12px; right: 14px; font-size: 22px; opacity: 0.15; transition: opacity 0.2s; }
+    .mastered-star.on { opacity: 1; }
+
+    .card-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .card-nav button {
       padding: 10px 22px; border-radius: 10px;
       border: 2px solid #ddd; background: #fff;
@@ -73,6 +128,15 @@
     }
     .card-nav button:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
     .card-counter { font-size: 14px; color: #999; font-weight: 600; }
+
+    .got-it-btn {
+      width: 100%; padding: 12px; border-radius: 12px;
+      border: 2px solid #eee; background: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 15px;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; color: #888;
+    }
+    .got-it-btn:hover { border-color: #f39c12; color: #f39c12; }
+    .got-it-btn.on { background: #fef9e7; border-color: #f39c12; color: #e67e22; }
 
     /* QUIZ */
     .quiz-score { display: flex; gap: 12px; justify-content: center; margin-bottom: 1.5rem; }
@@ -92,15 +156,14 @@
     .quiz-opt.correct { background: #27ae60; color: #fff; border-color: #27ae60; }
     .quiz-opt.wrong { background: #e74c3c; color: #fff; border-color: #e74c3c; }
     .quiz-opt.reveal { background: #eafaf1; border-color: #27ae60; color: #27ae60; }
-    .quiz-next {
+    .next-btn {
       width: 100%; padding: 14px; border-radius: 12px; border: none;
       background: #3498db; color: #fff; font-family: 'Fredoka One', cursive;
       font-size: 22px; cursor: pointer; transition: background 0.15s; display: none;
     }
-    .quiz-next:hover { background: #2980b9; }
+    .next-btn:hover { background: #2980b9; }
 
     /* MATCH */
-    .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
     .match-col-label { font-size: 12px; font-weight: 700; color: #bbb; text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
     .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .match-col { display: flex; flex-direction: column; gap: 10px; }
@@ -132,21 +195,120 @@
     }
     .reset-btn:hover { border-color: #c0392b; color: #c0392b; }
 
+    /* SCRAMBLE */
+    .scram-prompt { font-family: 'Fredoka One', cursive; font-size: 38px; color: #c0392b; text-align: center; margin-bottom: 4px; }
+    .scram-sub { font-size: 14px; color: #bbb; text-align: center; margin-bottom: 1.25rem; font-style: italic; }
+    .scram-answer {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      justify-content: center; margin-bottom: 1.25rem;
+      min-height: 56px; align-items: center;
+    }
+    .scram-slot {
+      width: 42px; height: 50px; border-radius: 10px;
+      border: 2px dashed #ddd; background: #fafafa;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive; font-size: 20px;
+      color: #c0392b; transition: all 0.15s;
+    }
+    .scram-slot.filled { border-style: solid; border-color: #c0392b; background: #fff5f5; cursor: pointer; }
+    .scram-slot.filled:hover { background: #fde8e8; }
+    .scram-slot.correct { background: #27ae60; border-color: #27ae60; color: #fff; cursor: default; }
+    .scram-slot.wrong-col { background: #e74c3c; border-color: #e74c3c; color: #fff; cursor: default; }
+    .scram-bank { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 1rem; min-height: 56px; }
+    .scram-tile {
+      width: 42px; height: 50px; border-radius: 10px;
+      border: 2px solid #3498db; background: #ebf5fb;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive; font-size: 20px;
+      color: #2980b9; cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .scram-tile:hover { background: #3498db; color: #fff; transform: translateY(-2px); }
+    .scram-tile.used { opacity: 0.18; cursor: default; pointer-events: none; }
+    .scram-feedback { text-align: center; font-family: 'Fredoka One', cursive; font-size: 26px; min-height: 38px; margin-bottom: 0.5rem; }
+
+    /* MEDALS */
+    .medals-header { text-align: center; margin-bottom: 1.25rem; }
+    .medals-header h2 { font-family: 'Fredoka One', cursive; font-size: 26px; color: #c0392b; }
+    .medals-header p { font-size: 13px; color: #bbb; margin-top: 4px; }
+    .medals-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+    .medal-card {
+      display: flex; align-items: center; gap: 14px;
+      background: #fff; border: 2px solid #f0f0f0;
+      border-radius: 12px; padding: 12px 16px;
+    }
+    .medal-card.unlocked { border-color: #f39c12; background: #fffbf0; }
+    .medal-icon { font-size: 34px; line-height: 1; filter: grayscale(1); opacity: 0.25; flex-shrink: 0; }
+    .medal-card.unlocked .medal-icon { filter: none; opacity: 1; }
+    .medal-name { font-weight: 700; font-size: 15px; color: #888; }
+    .medal-card.unlocked .medal-name { color: #333; }
+    .medal-desc { font-size: 12px; color: #ccc; margin-top: 2px; }
+    .medal-card.unlocked .medal-desc { color: #e67e22; }
+
+    .topic-progress-section { background: #fff; border: 2px solid #f0f0f0; border-radius: 12px; padding: 14px 16px; }
+    .topic-progress-section h3 { font-family: 'Fredoka One', cursive; font-size: 18px; color: #c0392b; margin-bottom: 10px; }
+    .tp-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f5f5f5; }
+    .tp-row:last-child { border-bottom: none; }
+    .tp-label { font-size: 13px; font-weight: 600; color: #555; width: 120px; flex-shrink: 0; }
+    .tp-bar-wrap { flex: 1; height: 7px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+    .tp-bar-fill { height: 100%; background: #27ae60; border-radius: 4px; transition: width 0.4s; }
+    .tp-count { font-size: 11px; font-weight: 700; color: #aaa; width: 36px; text-align: right; flex-shrink: 0; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: #2c3e50; color: #fff;
+      padding: 12px 22px; border-radius: 14px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 15px;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      white-space: nowrap; box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* CONFETTI */
+    .confetti-piece {
+      position: fixed; top: -14px;
+      width: 10px; height: 14px; border-radius: 2px;
+      animation: confetti-fall linear forwards;
+      z-index: 999; pointer-events: none;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
     .panel { display: none; }
     .panel.active { display: block; }
   </style>
 </head>
 <body>
 <div class="app">
+
   <div class="header">
     <h1>Polski dla dzieci 🇵🇱</h1>
-    <span>Polish for kids</span>
+    <div class="header-sub">Polish for kids</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="level-badge" id="levelBadge">⭐ Lv.1</div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">
+        <span id="levelName">Uczen</span>
+        <span id="xpCount">0 / 150 XP</span>
+      </div>
+      <div class="xp-bar"><div class="xp-bar-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+    <div class="streak-badge" id="streakBadge">🔥 0</div>
   </div>
 
   <div class="nav">
-    <button class="nav-btn active" onclick="setMode('flash')">🃏 Flashcards</button>
+    <button class="nav-btn active" onclick="setMode('flash')">🃏 Cards</button>
     <button class="nav-btn" onclick="setMode('quiz')">🧠 Quiz</button>
     <button class="nav-btn" onclick="setMode('match')">🔗 Match</button>
+    <button class="nav-btn" onclick="setMode('scram')">🧩 Scramble</button>
+    <button class="nav-btn" onclick="setMode('medals')">🏆 Medals</button>
   </div>
 
   <div class="topic-bar" id="topicBar"></div>
@@ -155,6 +317,7 @@
   <div id="flashMode" class="panel active">
     <div class="card-area">
       <div class="flashcard" onclick="flipCard()" id="flashcard">
+        <div class="mastered-star" id="masteredStar">⭐</div>
         <div class="word-pl" id="fPL">—</div>
         <div class="word-hint" id="fHint"></div>
         <div class="word-en" id="fEN"></div>
@@ -166,6 +329,7 @@
       <span class="card-counter" id="cardCounter">1 / 1</span>
       <button onclick="nextCard()">Next →</button>
     </div>
+    <button class="got-it-btn" id="gotItBtn" onclick="toggleGotIt()">⭐ Mark as learned</button>
   </div>
 
   <!-- QUIZ MODE -->
@@ -177,7 +341,7 @@
     <div class="quiz-q" id="quizQ">—</div>
     <div class="quiz-sub" id="quizSub"></div>
     <div class="quiz-options" id="quizOpts"></div>
-    <button class="quiz-next" id="quizNext" onclick="nextQuiz()">Next question →</button>
+    <button class="next-btn" id="quizNext" onclick="nextQuiz()">Next question →</button>
   </div>
 
   <!-- MATCH MODE -->
@@ -190,91 +354,397 @@
     <div class="match-result" id="matchResult">Brawo! 🎉 All matched!</div>
     <button class="reset-btn" onclick="resetMatch()">Shuffle new set</button>
   </div>
+
+  <!-- SCRAMBLE MODE -->
+  <div id="scramMode" class="panel">
+    <div class="quiz-score">
+      <span class="score-pill score-right">✓ <span id="sRight">0</span></span>
+      <span class="score-pill score-wrong">✗ <span id="sWrong">0</span></span>
+    </div>
+    <div class="scram-prompt" id="scramPrompt">—</div>
+    <div class="scram-sub" id="scramSub">Spell the Polish word</div>
+    <div class="scram-answer" id="scramAnswer"></div>
+    <div class="scram-bank" id="scramBank"></div>
+    <div class="scram-feedback" id="scramFeedback"></div>
+    <button class="next-btn" id="scramNext" onclick="nextScramble()">Next word →</button>
+  </div>
+
+  <!-- MEDALS MODE -->
+  <div id="medalsMode" class="panel">
+    <div class="medals-header">
+      <h2>🏆 Nagrody</h2>
+      <p>Earn medals by learning Polish!</p>
+    </div>
+    <div class="medals-list" id="medalsList"></div>
+    <div class="topic-progress-section">
+      <h3>Topic Progress</h3>
+      <div id="topicProgressList"></div>
+    </div>
+  </div>
+
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 const vocab = {
   greetings: [
-    {pl:"Cześć",en:"Hi / Hello",hint:"cheshch"},
-    {pl:"Dzień dobry",en:"Good morning",hint:"dyen DOH-bry"},
-    {pl:"Dobranoc",en:"Good night",hint:"doh-BRAH-nots"},
-    {pl:"Do widzenia",en:"Goodbye",hint:"do vee-DZEN-ya"},
-    {pl:"Dziękuję",en:"Thank you",hint:"dyen-KOO-yeh"},
-    {pl:"Proszę",en:"Please / Here you go",hint:"PROH-sheh"},
-    {pl:"Przepraszam",en:"Sorry / Excuse me",hint:"psheh-PRAH-shahm"},
-    {pl:"Tak",en:"Yes",hint:"tahk"},
-    {pl:"Nie",en:"No",hint:"nyeh"},
+    {pl:"Cześć",       en:"Hi / Hello",        hint:"cheshch"},
+    {pl:"Dzień dobry", en:"Good morning",       hint:"dyen DOH-bry"},
+    {pl:"Dobranoc",    en:"Good night",         hint:"doh-BRAH-nots"},
+    {pl:"Do widzenia", en:"Goodbye",            hint:"do vee-DZEN-ya"},
+    {pl:"Dziękuję",    en:"Thank you",          hint:"dyen-KOO-yeh"},
+    {pl:"Proszę",      en:"Please / Here you go",hint:"PROH-sheh"},
+    {pl:"Przepraszam", en:"Sorry / Excuse me",  hint:"psheh-PRAH-shahm"},
+    {pl:"Tak",         en:"Yes",                hint:"tahk"},
+    {pl:"Nie",         en:"No",                 hint:"nyeh"},
   ],
   numbers: [
-    {pl:"Jeden",en:"One",hint:"YEH-den"},
-    {pl:"Dwa",en:"Two",hint:"dvah"},
-    {pl:"Trzy",en:"Three",hint:"tshih"},
-    {pl:"Cztery",en:"Four",hint:"CHTE-ry"},
-    {pl:"Pięć",en:"Five",hint:"pyench"},
-    {pl:"Sześć",en:"Six",hint:"sheshch"},
-    {pl:"Siedem",en:"Seven",hint:"SHEH-dem"},
-    {pl:"Osiem",en:"Eight",hint:"OH-shyem"},
-    {pl:"Dziewięć",en:"Nine",hint:"djeh-VYENCH"},
-    {pl:"Dziesięć",en:"Ten",hint:"djeh-SHENCH"},
+    {pl:"Jeden",    en:"One",   hint:"YEH-den"},
+    {pl:"Dwa",      en:"Two",   hint:"dvah"},
+    {pl:"Trzy",     en:"Three", hint:"tshih"},
+    {pl:"Cztery",   en:"Four",  hint:"CHTE-ry"},
+    {pl:"Pięć",     en:"Five",  hint:"pyench"},
+    {pl:"Sześć",    en:"Six",   hint:"sheshch"},
+    {pl:"Siedem",   en:"Seven", hint:"SHEH-dem"},
+    {pl:"Osiem",    en:"Eight", hint:"OH-shyem"},
+    {pl:"Dziewięć", en:"Nine",  hint:"djeh-VYENCH"},
+    {pl:"Dziesięć", en:"Ten",   hint:"djeh-SHENCH"},
   ],
   colours: [
-    {pl:"Czerwony",en:"Red",hint:"cher-VOH-ny"},
-    {pl:"Niebieski",en:"Blue",hint:"nyeh-BYEH-skee"},
-    {pl:"Zielony",en:"Green",hint:"zheh-LOH-ny"},
-    {pl:"Żółty",en:"Yellow",hint:"ZHOOW-ty"},
-    {pl:"Czarny",en:"Black",hint:"CHAR-ny"},
-    {pl:"Biały",en:"White",hint:"BYAH-wy"},
-    {pl:"Różowy",en:"Pink",hint:"ROO-zhoh-vy"},
-    {pl:"Pomarańczowy",en:"Orange",hint:"po-ma-RAHN-choh-vy"},
+    {pl:"Czerwony",      en:"Red",    hint:"cher-VOH-ny"},
+    {pl:"Niebieski",     en:"Blue",   hint:"nyeh-BYEH-skee"},
+    {pl:"Zielony",       en:"Green",  hint:"zheh-LOH-ny"},
+    {pl:"Żółty",         en:"Yellow", hint:"ZHOOW-ty"},
+    {pl:"Czarny",        en:"Black",  hint:"CHAR-ny"},
+    {pl:"Biały",         en:"White",  hint:"BYAH-wy"},
+    {pl:"Różowy",        en:"Pink",   hint:"ROO-zhoh-vy"},
+    {pl:"Pomarańczowy",  en:"Orange", hint:"po-ma-RAHN-choh-vy"},
+    {pl:"Fioletowy",     en:"Purple", hint:"fyo-leh-TOH-vy"},
+    {pl:"Brązowy",       en:"Brown",  hint:"BRON-zoh-vy"},
   ],
   family: [
-    {pl:"Mama",en:"Mum",hint:"MAH-ma"},
-    {pl:"Tata",en:"Dad",hint:"TAH-ta"},
-    {pl:"Babcia",en:"Grandma",hint:"BAB-chya"},
-    {pl:"Dziadek",en:"Grandad",hint:"JA-deck"},
-    {pl:"Brat",en:"Brother",hint:"braht"},
-    {pl:"Siostra",en:"Sister",hint:"SHOS-tra"},
-    {pl:"Pies",en:"Dog",hint:"pyess"},
-    {pl:"Kot",en:"Cat",hint:"kot"},
+    {pl:"Mama",    en:"Mum",     hint:"MAH-ma"},
+    {pl:"Tata",    en:"Dad",     hint:"TAH-ta"},
+    {pl:"Babcia",  en:"Grandma", hint:"BAB-chya"},
+    {pl:"Dziadek", en:"Grandad", hint:"JA-deck"},
+    {pl:"Brat",    en:"Brother", hint:"braht"},
+    {pl:"Siostra", en:"Sister",  hint:"SHOS-tra"},
+    {pl:"Pies",    en:"Dog",     hint:"pyess"},
+    {pl:"Kot",     en:"Cat",     hint:"kot"},
   ],
   food: [
-    {pl:"Chleb",en:"Bread",hint:"hlep"},
-    {pl:"Mleko",en:"Milk",hint:"MLEH-ko"},
-    {pl:"Woda",en:"Water",hint:"VOH-da"},
-    {pl:"Jabłko",en:"Apple",hint:"YAB-ko"},
-    {pl:"Banan",en:"Banana",hint:"BAH-nan"},
-    {pl:"Zupa",en:"Soup",hint:"ZOO-pa"},
-    {pl:"Ciasto",en:"Cake",hint:"CHYAS-to"},
-    {pl:"Lody",en:"Ice cream",hint:"LOH-dy"},
+    {pl:"Chleb",  en:"Bread",     hint:"hlep"},
+    {pl:"Mleko",  en:"Milk",      hint:"MLEH-ko"},
+    {pl:"Woda",   en:"Water",     hint:"VOH-da"},
+    {pl:"Jabłko", en:"Apple",     hint:"YAB-ko"},
+    {pl:"Banan",  en:"Banana",    hint:"BAH-nan"},
+    {pl:"Zupa",   en:"Soup",      hint:"ZOO-pa"},
+    {pl:"Ciasto", en:"Cake",      hint:"CHYAS-to"},
+    {pl:"Lody",   en:"Ice cream", hint:"LOH-dy"},
+  ],
+  animals: [
+    {pl:"Kot",    en:"Cat",    hint:"kot"},
+    {pl:"Pies",   en:"Dog",    hint:"pyess"},
+    {pl:"Koń",    en:"Horse",  hint:"kon'"},
+    {pl:"Ptak",   en:"Bird",   hint:"ptak"},
+    {pl:"Ryba",   en:"Fish",   hint:"RYH-ba"},
+    {pl:"Królik", en:"Rabbit", hint:"KROO-leek"},
+    {pl:"Mysz",   en:"Mouse",  hint:"mysh"},
+    {pl:"Żaba",   en:"Frog",   hint:"ZHA-ba"},
+    {pl:"Świnia", en:"Pig",    hint:"SHVEE-nya"},
+    {pl:"Krowa",  en:"Cow",    hint:"KROH-va"},
+  ],
+  school: [
+    {pl:"Książka",    en:"Book",      hint:"KSYONZH-ka"},
+    {pl:"Ołówek",     en:"Pencil",    hint:"o-WOO-vek"},
+    {pl:"Długopis",   en:"Pen",       hint:"dwoo-GOH-pees"},
+    {pl:"Biurko",     en:"Desk",      hint:"BYOOR-ko"},
+    {pl:"Nauczyciel", en:"Teacher",   hint:"na-oo-CHY-chyel"},
+    {pl:"Tornister",  en:"School bag",hint:"tor-NEES-ter"},
+    {pl:"Linijka",    en:"Ruler",     hint:"lee-NEE-yka"},
+    {pl:"Klasa",      en:"Classroom", hint:"KLAH-sa"},
+  ],
+  clothes: [
+    {pl:"Koszula",    en:"Shirt",    hint:"ko-SHOO-la"},
+    {pl:"Spodnie",    en:"Trousers", hint:"SPOD-nyeh"},
+    {pl:"Sukienka",   en:"Dress",    hint:"soo-KYEN-ka"},
+    {pl:"Czapka",     en:"Hat",      hint:"CHAP-ka"},
+    {pl:"Buty",       en:"Shoes",    hint:"BOO-ty"},
+    {pl:"Skarpetki",  en:"Socks",    hint:"skar-PET-kee"},
+    {pl:"Kurtka",     en:"Jacket",   hint:"KOORT-ka"},
+    {pl:"Rękawiczki", en:"Gloves",   hint:"ren-ka-VEECH-kee"},
+  ],
+  weather: [
+    {pl:"Słońce",      en:"Sun",       hint:"SWON-tseh"},
+    {pl:"Deszcz",      en:"Rain",      hint:"deshch"},
+    {pl:"Śnieg",       en:"Snow",      hint:"shnyeg"},
+    {pl:"Wiatr",       en:"Wind",      hint:"VYATR"},
+    {pl:"Ciepło",      en:"Warm",      hint:"CHYEP-wo"},
+    {pl:"Zimno",       en:"Cold",      hint:"ZEEM-no"},
+    {pl:"Chmura",      en:"Cloud",     hint:"HMOO-ra"},
+    {pl:"Poniedziałek",en:"Monday",    hint:"po-nyeh-DJA-wek"},
+    {pl:"Wtorek",      en:"Tuesday",   hint:"VTOH-rek"},
+    {pl:"Środa",       en:"Wednesday", hint:"SHROH-da"},
+    {pl:"Czwartek",    en:"Thursday",  hint:"CHVAR-tek"},
+    {pl:"Piątek",      en:"Friday",    hint:"PYON-tek"},
+    {pl:"Sobota",      en:"Saturday",  hint:"so-BOH-ta"},
+    {pl:"Niedziela",   en:"Sunday",    hint:"nyeh-DJEH-la"},
+  ],
+  body: [
+    {pl:"Głowa",  en:"Head",  hint:"GWOH-va"},
+    {pl:"Oko",    en:"Eye",   hint:"OH-ko"},
+    {pl:"Nos",    en:"Nose",  hint:"nos"},
+    {pl:"Usta",   en:"Mouth", hint:"OO-sta"},
+    {pl:"Ucho",   en:"Ear",   hint:"OO-ho"},
+    {pl:"Ręka",   en:"Hand",  hint:"REHN-ka"},
+    {pl:"Noga",   en:"Leg",   hint:"NOH-ga"},
+    {pl:"Brzuch", en:"Tummy", hint:"bzhookh"},
+  ],
+  home: [
+    {pl:"Dom",      en:"House",    hint:"dom"},
+    {pl:"Łóżko",    en:"Bed",      hint:"WOOZH-ko"},
+    {pl:"Stół",     en:"Table",    hint:"stoow"},
+    {pl:"Krzesło",  en:"Chair",    hint:"KSHE-swo"},
+    {pl:"Okno",     en:"Window",   hint:"OK-no"},
+    {pl:"Drzwi",    en:"Door",     hint:"djvee"},
+    {pl:"Kuchnia",  en:"Kitchen",  hint:"KOOKH-nya"},
+    {pl:"Łazienka", en:"Bathroom", hint:"wa-ZYEN-ka"},
+  ],
+  actions: [
+    {pl:"Biegać",  en:"Run",   hint:"BYEH-gach"},
+    {pl:"Skakać",  en:"Jump",  hint:"SKA-kach"},
+    {pl:"Grać",    en:"Play",  hint:"grach"},
+    {pl:"Rysować", en:"Draw",  hint:"ri-SOH-vach"},
+    {pl:"Czytać",  en:"Read",  hint:"CHI-tach"},
+    {pl:"Śpiewać", en:"Sing",  hint:"shpyeh-VACH"},
+    {pl:"Tańczyć", en:"Dance", hint:"TAN-chich"},
+    {pl:"Spać",    en:"Sleep", hint:"spach"},
   ],
 };
 
 const topicLabels = {
-  greetings:"👋 Greetings",
-  numbers:"🔢 Numbers",
-  colours:"🎨 Colours",
-  family:"👨‍👩‍👧 Family",
-  food:"🍎 Food"
+  greetings: "👋 Greetings",
+  numbers:   "🔢 Numbers",
+  colours:   "🎨 Colours",
+  family:    "👨‍👩‍👧 Family",
+  food:      "🍎 Food",
+  animals:   "🐾 Animals",
+  school:    "🏫 School",
+  clothes:   "👕 Clothes",
+  weather:   "🌦 Weather",
+  body:      "💪 Body",
+  home:      "🏠 Home",
+  actions:   "🎯 Actions",
 };
+
+// ── Gamification constants ──────────────────────────────────────────────────
+
+const LEVELS = [
+  {name:"Uczen",      min:0},
+  {name:"Odkrywca",   min:150},
+  {name:"Znawca",     min:400},
+  {name:"Mistrz",     min:900},
+  {name:"Czarodziej", min:2000},
+];
+
+const ACHIEVEMENTS = [
+  {id:"first_learn",  icon:"🌟", name:"Pierwsze Kroki",  desc:"Mark your first learned word"},
+  {id:"quiz_10",      icon:"🧠", name:"Mózgowiec",       desc:"Get 10 correct quiz answers"},
+  {id:"scram_5",      icon:"📝", name:"Liternik",        desc:"Spell 5 words correctly"},
+  {id:"match_5",      icon:"🔗", name:"Łącznik",         desc:"Complete 5 match sets"},
+  {id:"topic_master", icon:"🏆", name:"Mistrz Tematu",   desc:"Master all words in a topic"},
+  {id:"polyglot",     icon:"🌈", name:"Wielojęzyczny",   desc:"Master 5 or more topics"},
+];
+
+// ── State ───────────────────────────────────────────────────────────────────
+
 const topics = Object.keys(vocab);
 let currentTopic = 'greetings';
-let currentMode = 'flash';
+let currentMode  = 'flash';
+
 let cardIdx = 0;
 let cardFlipped = false;
+
 let qRight = 0, qWrong = 0;
 let quizAnswered = false;
 let quizPool = [];
+
 let matchSelected = null;
 let matchPool = [];
 let matchedCount = 0;
+
+let scramPool = [];
+let scramWord = null;
+let scramLetters = [];
+let scramAnswer = [];
+let scramAnswered = false;
+let scramRight = 0, scramWrong = 0;
+
+let mastered = {};
+let xp = 0;
+let streakDays = 0;
+let lastActive = '';
+let stats = {quizRight: 0, scramRight: 0, matchSets: 0};
+let achievements = {};
+
+try { mastered      = JSON.parse(localStorage.getItem('polski_mastered')      || '{}'); } catch(e){}
+try { xp            = parseInt(localStorage.getItem('polski_xp')              || '0', 10); } catch(e){}
+try { streakDays    = parseInt(localStorage.getItem('polski_streak')          || '0', 10); } catch(e){}
+try { lastActive    =          localStorage.getItem('polski_last_active')     || '';        } catch(e){}
+try { stats         = JSON.parse(localStorage.getItem('polski_stats')         || '{}');
+      stats.quizRight  = stats.quizRight  || 0;
+      stats.scramRight = stats.scramRight || 0;
+      stats.matchSets  = stats.matchSets  || 0; } catch(e){}
+try { achievements  = JSON.parse(localStorage.getItem('polski_achievements')  || '{}'); } catch(e){}
+
+// ── Persistence ─────────────────────────────────────────────────────────────
+
+function saveAll() {
+  try {
+    localStorage.setItem('polski_mastered',     JSON.stringify(mastered));
+    localStorage.setItem('polski_xp',           xp);
+    localStorage.setItem('polski_streak',       streakDays);
+    localStorage.setItem('polski_last_active',  lastActive);
+    localStorage.setItem('polski_stats',        JSON.stringify(stats));
+    localStorage.setItem('polski_achievements', JSON.stringify(achievements));
+  } catch(e){}
+}
+
+// ── Mastery helpers ──────────────────────────────────────────────────────────
+
+function isMastered(topic, pl) { return !!(mastered[topic] && mastered[topic][pl]); }
+function setMastered(topic, pl, val) {
+  if (!mastered[topic]) mastered[topic] = {};
+  if (val) mastered[topic][pl] = true;
+  else delete mastered[topic][pl];
+}
+function masteredCount(topic) {
+  return mastered[topic] ? Object.keys(mastered[topic]).length : 0;
+}
+function isTopicComplete(topic) {
+  return masteredCount(topic) === vocab[topic].length;
+}
+
+// ── XP / Level / Streak ─────────────────────────────────────────────────────
+
+function getLevelIndex() {
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i].min) return i;
+  }
+  return 0;
+}
+
+function addXP(amount) {
+  const prevLevel = getLevelIndex();
+  xp += amount;
+  touchStreak();
+  saveAll();
+  updateStatsBar();
+  const newLevel = getLevelIndex();
+  if (newLevel > prevLevel) {
+    showToast(`⭐ Level Up! You are now ${LEVELS[newLevel].name} (Lv.${newLevel + 1})!`);
+    launchConfetti();
+  }
+  checkAchievements();
+}
+
+function touchStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (lastActive === today) return;
+  if (lastActive === yesterday) streakDays++;
+  else streakDays = 1;
+  lastActive = today;
+}
+
+function updateStatsBar() {
+  const lvlIdx = getLevelIndex();
+  const lvl    = LEVELS[lvlIdx];
+  const next   = LEVELS[lvlIdx + 1];
+  document.getElementById('levelBadge').textContent = `⭐ Lv.${lvlIdx + 1}`;
+  document.getElementById('levelName').textContent  = lvl.name;
+  if (next) {
+    const progress = Math.min(100, ((xp - lvl.min) / (next.min - lvl.min)) * 100);
+    document.getElementById('xpFill').style.width   = progress + '%';
+    document.getElementById('xpCount').textContent  = `${xp} / ${next.min} XP`;
+  } else {
+    document.getElementById('xpFill').style.width   = '100%';
+    document.getElementById('xpCount').textContent  = `${xp} XP — MAX!`;
+  }
+  document.getElementById('streakBadge').textContent = `🔥 ${streakDays}`;
+}
+
+// ── Achievements ─────────────────────────────────────────────────────────────
+
+function checkAchievements() {
+  const completedTopics = topics.filter(t => isTopicComplete(t)).length;
+  const checks = [
+    {id:'first_learn',  cond: Object.values(mastered).some(t => Object.keys(t).length > 0)},
+    {id:'quiz_10',      cond: stats.quizRight  >= 10},
+    {id:'scram_5',      cond: stats.scramRight >= 5},
+    {id:'match_5',      cond: stats.matchSets  >= 5},
+    {id:'topic_master', cond: completedTopics  >= 1},
+    {id:'polyglot',     cond: completedTopics  >= 5},
+  ];
+  checks.forEach(({id, cond}) => {
+    if (cond && !achievements[id]) {
+      achievements[id] = true;
+      const ach = ACHIEVEMENTS.find(a => a.id === id);
+      saveAll();
+      showToast(`${ach.icon} Medal Unlocked: ${ach.name}!`);
+    }
+  });
+}
+
+// ── Toast & Confetti ─────────────────────────────────────────────────────────
+
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+function launchConfetti() {
+  const colors = ['#c0392b','#27ae60','#3498db','#f39c12','#9b59b6','#e67e22','#1abc9c'];
+  for (let i = 0; i < 28; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = (Math.random() * 100) + 'vw';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 3500);
+    }, i * 60);
+  }
+}
+
+// ── Topic bar ────────────────────────────────────────────────────────────────
 
 function buildTopicBar() {
   const bar = document.getElementById('topicBar');
   bar.innerHTML = '';
   topics.forEach(t => {
+    const total    = vocab[t].length;
+    const done     = masteredCount(t);
+    const complete = done === total;
+    const pct      = total > 0 ? (done / total * 100) : 0;
     const b = document.createElement('button');
-    b.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
-    b.textContent = topicLabels[t];
+    b.className = 'topic-btn'
+      + (t === currentTopic ? ' active' : '')
+      + (complete ? ' complete' : '');
+    b.innerHTML = `
+      <div class="topic-btn-text">
+        <span>${topicLabels[t]}</span>
+        ${done > 0 ? `<span class="topic-prog-count">${done}/${total}</span>` : ''}
+      </div>
+      <div class="topic-mini-bar">
+        <div class="topic-mini-fill" style="width:${pct}%"></div>
+      </div>`;
     b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
     bar.appendChild(b);
   });
@@ -291,42 +761,87 @@ function resetAll() {
     nextQuiz();
   }
   if (currentMode === 'match') resetMatch();
+  if (currentMode === 'scram') {
+    scramRight = 0; scramWrong = 0;
+    document.getElementById('sRight').textContent = 0;
+    document.getElementById('sWrong').textContent = 0;
+    scramPool = [];
+    nextScramble();
+  }
 }
 
 function setMode(m) {
   currentMode = m;
-  ['flash','quiz','match'].forEach((name, i) => {
+  const modes   = ['flash','quiz','match','scram','medals'];
+  modes.forEach((name, i) => {
     document.getElementById(name + 'Mode').classList.toggle('active', name === m);
     document.querySelectorAll('.nav-btn')[i].classList.toggle('active', name === m);
   });
-  resetAll();
+  document.getElementById('topicBar').style.display = m === 'medals' ? 'none' : '';
+  if (m === 'medals') renderMedals();
+  else resetAll();
 }
+
+// ── FLASHCARDS ───────────────────────────────────────────────────────────────
 
 function renderFlash() {
   const words = vocab[currentTopic];
   const w = words[cardIdx];
-  document.getElementById('fPL').textContent = w.pl;
-  document.getElementById('fHint').textContent = '(' + w.hint + ')';
-  document.getElementById('fEN').textContent = '';
+  document.getElementById('fPL').textContent       = w.pl;
+  document.getElementById('fHint').textContent     = '(' + w.hint + ')';
+  document.getElementById('fEN').textContent       = '';
   document.getElementById('fFlipHint').textContent = 'tap to reveal';
   document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' / ' + words.length;
   cardFlipped = false;
+  updateGotItBtn();
+}
+
+function updateGotItBtn() {
+  const w = vocab[currentTopic][cardIdx];
+  const m = isMastered(currentTopic, w.pl);
+  document.getElementById('gotItBtn').textContent   = m ? '⭐ Learned! (tap to undo)' : '⭐ Mark as learned';
+  document.getElementById('gotItBtn').className     = 'got-it-btn' + (m ? ' on' : '');
+  document.getElementById('masteredStar').className = 'mastered-star' + (m ? ' on' : '');
+}
+
+function toggleGotIt() {
+  const w         = vocab[currentTopic][cardIdx];
+  const wasLearned = isMastered(currentTopic, w.pl);
+  setMastered(currentTopic, w.pl, !wasLearned);
+  updateGotItBtn();
+  buildTopicBar();
+
+  if (!wasLearned) {
+    addXP(5);
+    showToast('+5 XP — Word learned!');
+    if (isTopicComplete(currentTopic)) {
+      addXP(75);
+      showToast(`🏆 Topic mastered! +75 bonus XP!`);
+      launchConfetti();
+    }
+    checkAchievements();
+    setTimeout(() => nextCard(), 350);
+  } else {
+    saveAll();
+  }
 }
 
 function flipCard() {
   const w = vocab[currentTopic][cardIdx];
   if (!cardFlipped) {
-    document.getElementById('fEN').textContent = w.en;
+    document.getElementById('fEN').textContent       = w.en;
     document.getElementById('fFlipHint').textContent = '';
     cardFlipped = true;
   } else {
-    document.getElementById('fEN').textContent = '';
+    document.getElementById('fEN').textContent       = '';
     document.getElementById('fFlipHint').textContent = 'tap to reveal';
     cardFlipped = false;
   }
 }
 function nextCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx + 1) % w.length; renderFlash(); }
 function prevCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx - 1 + w.length) % w.length; renderFlash(); }
+
+// ── Shuffle ──────────────────────────────────────────────────────────────────
 
 function shuffle(a) {
   const arr = [...a];
@@ -337,17 +852,19 @@ function shuffle(a) {
   return arr;
 }
 
+// ── QUIZ ─────────────────────────────────────────────────────────────────────
+
 function nextQuiz() {
   quizAnswered = false;
   document.getElementById('quizNext').style.display = 'none';
   const words = vocab[currentTopic];
   if (quizPool.length === 0) quizPool = shuffle([...words]);
-  const current = quizPool.pop();
-  const dirPLtoEN = Math.random() > 0.5;
-  document.getElementById('quizQ').textContent = dirPLtoEN ? current.pl : current.en;
+  const current    = quizPool.pop();
+  const dirPLtoEN  = Math.random() > 0.5;
+  document.getElementById('quizQ').textContent   = dirPLtoEN ? current.pl : current.en;
   document.getElementById('quizSub').textContent = dirPLtoEN ? '(' + current.hint + ')' : 'What is this in Polish?';
   const wrongs = shuffle(words.filter(w => w.pl !== current.pl)).slice(0, 3);
-  const opts = shuffle([current, ...wrongs]);
+  const opts   = shuffle([current, ...wrongs]);
   const container = document.getElementById('quizOpts');
   container.innerHTML = '';
   opts.forEach(opt => {
@@ -359,29 +876,36 @@ function nextQuiz() {
       quizAnswered = true;
       const isRight = opt.pl === current.pl;
       if (isRight) {
-        b.classList.add('correct'); qRight++;
+        b.classList.add('correct');
+        qRight++;
+        stats.quizRight++;
         document.getElementById('qRight').textContent = qRight;
+        addXP(10);
+        showToast('+10 XP — Correct!');
       } else {
-        b.classList.add('wrong'); qWrong++;
+        b.classList.add('wrong');
+        qWrong++;
         document.getElementById('qWrong').textContent = qWrong;
         Array.from(container.children).forEach(btn => {
-          const label = dirPLtoEN ? current.en : current.pl;
-          if (btn.textContent === label) btn.classList.add('reveal');
+          if (btn.textContent === (dirPLtoEN ? current.en : current.pl)) btn.classList.add('reveal');
         });
       }
       Array.from(container.children).forEach(btn => btn.disabled = true);
       document.getElementById('quizNext').style.display = 'block';
+      checkAchievements();
     };
     container.appendChild(b);
   });
 }
+
+// ── MATCH ────────────────────────────────────────────────────────────────────
 
 function resetMatch() {
   matchSelected = null; matchedCount = 0;
   const words = vocab[currentTopic];
   matchPool = shuffle([...words]).slice(0, 5);
   const polishItems = shuffle([...matchPool]);
-  const engItems = shuffle([...matchPool]);
+  const engItems    = shuffle([...matchPool]);
   const grid = document.getElementById('matchGrid');
   grid.innerHTML = '';
   document.getElementById('matchResult').style.display = 'none';
@@ -389,13 +913,11 @@ function resetMatch() {
   polishCol.className = 'match-col';
   const engCol = document.createElement('div');
   engCol.className = 'match-col';
-
   polishItems.forEach(w => {
     const b = document.createElement('button');
     b.className = 'match-btn';
     b.textContent = w.pl;
-    b.dataset.pl = w.pl;
-    b.dataset.side = 'pl';
+    b.dataset.pl = w.pl; b.dataset.side = 'pl';
     b.onclick = () => handleMatch(b);
     polishCol.appendChild(b);
   });
@@ -403,8 +925,7 @@ function resetMatch() {
     const b = document.createElement('button');
     b.className = 'match-btn';
     b.textContent = w.en;
-    b.dataset.pl = w.pl;
-    b.dataset.side = 'en';
+    b.dataset.pl = w.pl; b.dataset.side = 'en';
     b.onclick = () => handleMatch(b);
     engCol.appendChild(b);
   });
@@ -415,22 +936,25 @@ function resetMatch() {
 function handleMatch(btn) {
   if (btn.classList.contains('matched')) return;
   if (!matchSelected) {
-    matchSelected = btn;
-    btn.classList.add('selected');
+    matchSelected = btn; btn.classList.add('selected');
   } else {
-    if (matchSelected === btn) {
-      btn.classList.remove('selected'); matchSelected = null; return;
-    }
+    if (matchSelected === btn) { btn.classList.remove('selected'); matchSelected = null; return; }
     if (matchSelected.dataset.side === btn.dataset.side) {
-      matchSelected.classList.remove('selected');
-      matchSelected = btn; btn.classList.add('selected'); return;
+      matchSelected.classList.remove('selected'); matchSelected = btn; btn.classList.add('selected'); return;
     }
     const a = matchSelected;
     if (a.dataset.pl === btn.dataset.pl) {
       a.classList.remove('selected'); a.classList.add('matched'); a.disabled = true;
       btn.classList.add('matched'); btn.disabled = true;
       matchedCount++;
-      if (matchedCount === matchPool.length) document.getElementById('matchResult').style.display = 'block';
+      if (matchedCount === matchPool.length) {
+        document.getElementById('matchResult').style.display = 'block';
+        stats.matchSets++;
+        addXP(25);
+        showToast('+25 XP — All matched! Brawo!');
+        launchConfetti();
+        checkAchievements();
+      }
     } else {
       a.classList.add('wrong-shake'); btn.classList.add('wrong-shake');
       setTimeout(() => { a.classList.remove('wrong-shake','selected'); btn.classList.remove('wrong-shake'); }, 400);
@@ -439,6 +963,128 @@ function handleMatch(btn) {
   }
 }
 
+// ── SCRAMBLE ─────────────────────────────────────────────────────────────────
+
+function nextScramble() {
+  scramAnswered = false;
+  document.getElementById('scramNext').style.display = 'none';
+  document.getElementById('scramFeedback').textContent = '';
+  const allWords = vocab[currentTopic];
+  const eligible = allWords.filter(w => !w.pl.includes(' '));
+  const words    = eligible.length > 0 ? eligible : allWords;
+  if (scramPool.length === 0) scramPool = shuffle([...words]);
+  scramWord = scramPool.pop();
+  document.getElementById('scramPrompt').textContent = scramWord.en;
+  document.getElementById('scramSub').textContent    = 'Spell the Polish word';
+  const chars = [...scramWord.pl];
+  scramLetters = chars.map((char, id) => ({char, id}));
+  let attempts = 0;
+  do { scramLetters = shuffle(scramLetters); attempts++; }
+  while (attempts < 20 && scramLetters.map(l => l.char).join('') === scramWord.pl);
+  scramAnswer = [];
+  renderScramble();
+}
+
+function renderScramble() {
+  const chars = [...scramWord.pl];
+  const answerDiv = document.getElementById('scramAnswer');
+  answerDiv.innerHTML = '';
+  chars.forEach((_, pos) => {
+    const slot   = document.createElement('div');
+    const filled = pos < scramAnswer.length;
+    slot.className = 'scram-slot' + (filled ? ' filled' : '');
+    if (filled) {
+      slot.textContent = scramLetters.find(l => l.id === scramAnswer[pos]).char;
+      if (!scramAnswered) slot.onclick = () => removeFromAnswer(pos);
+    }
+    answerDiv.appendChild(slot);
+  });
+  const bankDiv = document.getElementById('scramBank');
+  bankDiv.innerHTML = '';
+  scramLetters.forEach(letter => {
+    const tile = document.createElement('div');
+    tile.className = 'scram-tile' + (scramAnswer.includes(letter.id) ? ' used' : '');
+    tile.textContent = letter.char;
+    tile.onclick = () => addToAnswer(letter.id);
+    bankDiv.appendChild(tile);
+  });
+}
+
+function addToAnswer(id) {
+  if (scramAnswered || scramAnswer.includes(id)) return;
+  scramAnswer.push(id);
+  renderScramble();
+  if (scramAnswer.length === [...scramWord.pl].length) checkScramble();
+}
+function removeFromAnswer(pos) {
+  if (scramAnswered) return;
+  scramAnswer.splice(pos, 1);
+  renderScramble();
+}
+function checkScramble() {
+  scramAnswered = true;
+  const typed   = scramAnswer.map(id => scramLetters.find(l => l.id === id).char).join('');
+  const correct = typed === scramWord.pl;
+  document.getElementById('scramAnswer').querySelectorAll('.scram-slot').forEach(slot => {
+    slot.classList.add(correct ? 'correct' : 'wrong-col');
+    slot.onclick = null;
+  });
+  const fb = document.getElementById('scramFeedback');
+  if (correct) {
+    fb.textContent    = 'Brawo! 🎉';
+    fb.style.color    = '#27ae60';
+    scramRight++;
+    stats.scramRight++;
+    document.getElementById('sRight').textContent = scramRight;
+    addXP(15);
+    showToast('+15 XP — Dobrze! Well spelled!');
+  } else {
+    fb.textContent  = '✗  ' + scramWord.pl;
+    fb.style.color  = '#e74c3c';
+    scramWrong++;
+    document.getElementById('sWrong').textContent = scramWrong;
+  }
+  document.getElementById('scramNext').style.display = 'block';
+  checkAchievements();
+}
+
+// ── MEDALS ───────────────────────────────────────────────────────────────────
+
+function renderMedals() {
+  const list = document.getElementById('medalsList');
+  list.innerHTML = '';
+  ACHIEVEMENTS.forEach(ach => {
+    const unlocked = !!achievements[ach.id];
+    const card = document.createElement('div');
+    card.className = 'medal-card' + (unlocked ? ' unlocked' : '');
+    card.innerHTML = `
+      <div class="medal-icon">${ach.icon}</div>
+      <div>
+        <div class="medal-name">${ach.name}</div>
+        <div class="medal-desc">${ach.desc}</div>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  const tpList = document.getElementById('topicProgressList');
+  tpList.innerHTML = '';
+  topics.forEach(t => {
+    const total = vocab[t].length;
+    const done  = masteredCount(t);
+    const pct   = total > 0 ? (done / total * 100) : 0;
+    const row   = document.createElement('div');
+    row.className = 'tp-row';
+    row.innerHTML = `
+      <div class="tp-label">${topicLabels[t]}</div>
+      <div class="tp-bar-wrap"><div class="tp-bar-fill" style="width:${pct}%"></div></div>
+      <div class="tp-count">${done}/${total}</div>`;
+    tpList.appendChild(row);
+  });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+
+updateStatsBar();
 buildTopicBar();
 renderFlash();
 </script>
