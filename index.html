@@ -856,10 +856,15 @@ function prevCard() { const w = vocab[currentTopic]; cardIdx = (cardIdx - 1 + w.
 function speakWord(text) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'pl-PL';
-  u.rate = 0.85;
-  window.speechSynthesis.speak(u);
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'pl-PL';
+    u.rate = 0.85;
+    const voices = window.speechSynthesis.getVoices();
+    const plVoice = voices.find(v => v.lang.startsWith('pl'));
+    if (plVoice) u.voice = plVoice;
+    window.speechSynthesis.speak(u);
+  }, 50);
 }
 
 function shuffle(a) {
