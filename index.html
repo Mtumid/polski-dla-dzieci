@@ -287,12 +287,77 @@
       100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
     }
 
+    /* PROFILES */
+    .profile-bar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 0.75rem; padding: 10px 14px;
+      background: #fff; border-radius: 12px; border: 2px solid #f0f0f0;
+      overflow-x: auto;
+    }
+    .profile-avatar {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .profile-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive; font-size: 20px; color: #fff;
+      border: 3px solid transparent; transition: all 0.2s;
+    }
+    .profile-avatar.active .profile-circle { border-color: #333; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333; }
+    .profile-avatar-name { font-size: 10px; font-weight: 700; color: #999; max-width: 48px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-avatar.active .profile-avatar-name { color: #333; }
+    .profile-add-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: 2px dashed #ddd;
+      background: none; font-size: 22px; cursor: pointer; color: #ccc;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .profile-add-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+    /* PROFILE MODAL */
+    .profile-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000;
+    }
+    .profile-modal-overlay.hidden { display: none; }
+    .profile-modal {
+      background: #fff; border-radius: 20px; padding: 2rem 1.5rem;
+      width: min(340px, 90vw); text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .profile-modal h2 { font-family: 'Fredoka One', cursive; font-size: 26px; color: #c0392b; margin-bottom: 0.5rem; }
+    .profile-modal p { font-size: 14px; color: #999; margin-bottom: 1.5rem; }
+    .profile-name-input {
+      width: 100%; padding: 12px 16px; border-radius: 12px;
+      border: 2px solid #eee; font-family: 'Nunito', sans-serif;
+      font-size: 18px; font-weight: 700; text-align: center;
+      margin-bottom: 1.25rem; outline: none; color: #333;
+    }
+    .profile-name-input:focus { border-color: #c0392b; }
+    .color-swatches { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .color-swatch {
+      width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+      border: 3px solid transparent; transition: all 0.15s;
+    }
+    .color-swatch.selected { border-color: #333; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333; transform: scale(1.15); }
+    .profile-create-btn {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: #c0392b; color: #fff; font-family: 'Fredoka One', cursive;
+      font-size: 22px; cursor: pointer; transition: background 0.15s;
+    }
+    .profile-create-btn:hover { background: #a93226; }
+    .profile-create-btn:disabled { background: #ddd; cursor: default; }
+
     .panel { display: none; }
     .panel.active { display: block; }
   </style>
 </head>
 <body>
 <div class="app">
+
+  <!-- PROFILE BAR -->
+  <div class="profile-bar" id="profileBar"></div>
 
   <div class="header">
     <h1>Polski dla dzieci 🇵🇱</h1>
@@ -392,6 +457,17 @@
     </div>
   </div>
 
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="profile-modal-overlay hidden" id="profileModalOverlay">
+  <div class="profile-modal">
+    <h2>👤 New Profile</h2>
+    <p>Enter a name for this player</p>
+    <input class="profile-name-input" id="profileNameInput" type="text" maxlength="12" placeholder="Name..." autocomplete="off" />
+    <div class="color-swatches" id="colorSwatches"></div>
+    <button class="profile-create-btn" id="profileCreateBtn" onclick="confirmCreateProfile()" disabled>Let's go! 🚀</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -567,6 +643,102 @@ const ACHIEVEMENTS = [
   {id:"polyglot",     icon:"🌈", name:"Wielojęzyczny",   desc:"Master 5 or more topics"},
 ];
 
+// ── Profiles ─────────────────────────────────────────────────────────────────
+
+const PROFILE_COLORS = ['#e74c3c','#3498db','#27ae60','#9b59b6','#f39c12','#1abc9c'];
+
+let profiles = [];
+let activeProfileId = null;
+
+function pk(key) { return 'polski_' + key + '_' + activeProfileId; }
+
+function saveProfiles() {
+  localStorage.setItem('polski_profiles', JSON.stringify(profiles));
+  localStorage.setItem('polski_active', activeProfileId);
+}
+
+function loadProfileData(id) {
+  mastered = {}; xp = 0; streakDays = 0; lastActive = '';
+  stats = {quizRight:0, scramRight:0, matchSets:0}; achievements = {};
+  try { mastered     = JSON.parse(localStorage.getItem('polski_mastered_'     + id) || '{}'); } catch(e){}
+  try { xp           = parseInt(localStorage.getItem('polski_xp_'            + id) || '0', 10); } catch(e){}
+  try { streakDays   = parseInt(localStorage.getItem('polski_streak_'        + id) || '0', 10); } catch(e){}
+  try { lastActive   =          localStorage.getItem('polski_last_active_'   + id) || '';       } catch(e){}
+  try { stats        = JSON.parse(localStorage.getItem('polski_stats_'       + id) || '{}');
+        stats.quizRight  = stats.quizRight  || 0;
+        stats.scramRight = stats.scramRight || 0;
+        stats.matchSets  = stats.matchSets  || 0; } catch(e){}
+  try { achievements = JSON.parse(localStorage.getItem('polski_achievements_'+ id) || '{}'); } catch(e){}
+}
+
+function switchProfile(id) {
+  saveAll();
+  activeProfileId = id;
+  saveProfiles();
+  loadProfileData(id);
+  touchStreak();
+  updateStatsBar();
+  renderProfileBar();
+  resetAll();
+}
+
+function createProfile(name, colorIdx) {
+  const id = Date.now().toString(36);
+  profiles.push({id, name, colorIdx});
+  saveProfiles();
+  switchProfile(id);
+}
+
+function renderProfileBar() {
+  const bar = document.getElementById('profileBar');
+  bar.innerHTML = '';
+  profiles.forEach(p => {
+    const wrap = document.createElement('div');
+    wrap.className = 'profile-avatar' + (p.id === activeProfileId ? ' active' : '');
+    wrap.innerHTML = `<div class="profile-circle" style="background:${PROFILE_COLORS[p.colorIdx]}">${p.name[0].toUpperCase()}</div><div class="profile-avatar-name">${p.name}</div>`;
+    wrap.onclick = () => { if (p.id !== activeProfileId) switchProfile(p.id); };
+    bar.appendChild(wrap);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'profile-add-btn';
+  addBtn.title = 'Add profile';
+  addBtn.textContent = '+';
+  addBtn.onclick = openProfileModal;
+  bar.appendChild(addBtn);
+}
+
+let selectedColorIdx = 0;
+
+function openProfileModal() {
+  document.getElementById('profileNameInput').value = '';
+  document.getElementById('profileCreateBtn').disabled = true;
+  selectedColorIdx = 0;
+  const sw = document.getElementById('colorSwatches');
+  sw.innerHTML = '';
+  PROFILE_COLORS.forEach((c, i) => {
+    const s = document.createElement('div');
+    s.className = 'color-swatch' + (i === 0 ? ' selected' : '');
+    s.style.background = c;
+    s.onclick = () => {
+      selectedColorIdx = i;
+      sw.querySelectorAll('.color-swatch').forEach((el, j) => el.classList.toggle('selected', j === i));
+    };
+    sw.appendChild(s);
+  });
+  document.getElementById('profileNameInput').oninput = function() {
+    document.getElementById('profileCreateBtn').disabled = this.value.trim().length === 0;
+  };
+  document.getElementById('profileModalOverlay').classList.remove('hidden');
+  document.getElementById('profileNameInput').focus();
+}
+
+function confirmCreateProfile() {
+  const name = document.getElementById('profileNameInput').value.trim();
+  if (!name) return;
+  document.getElementById('profileModalOverlay').classList.add('hidden');
+  createProfile(name, selectedColorIdx);
+}
+
 // ── State ───────────────────────────────────────────────────────────────────
 
 const topics = Object.keys(vocab);
@@ -598,26 +770,24 @@ let lastActive = '';
 let stats = {quizRight: 0, scramRight: 0, matchSets: 0};
 let achievements = {};
 
-try { mastered      = JSON.parse(localStorage.getItem('polski_mastered')      || '{}'); } catch(e){}
-try { xp            = parseInt(localStorage.getItem('polski_xp')              || '0', 10); } catch(e){}
-try { streakDays    = parseInt(localStorage.getItem('polski_streak')          || '0', 10); } catch(e){}
-try { lastActive    =          localStorage.getItem('polski_last_active')     || '';        } catch(e){}
-try { stats         = JSON.parse(localStorage.getItem('polski_stats')         || '{}');
-      stats.quizRight  = stats.quizRight  || 0;
-      stats.scramRight = stats.scramRight || 0;
-      stats.matchSets  = stats.matchSets  || 0; } catch(e){}
-try { achievements  = JSON.parse(localStorage.getItem('polski_achievements')  || '{}'); } catch(e){}
+// ── Profile init ─────────────────────────────────────────────────────────────
+
+try { profiles = JSON.parse(localStorage.getItem('polski_profiles') || '[]'); } catch(e){}
+try { activeProfileId = localStorage.getItem('polski_active') || null; } catch(e){}
+if (!profiles.find(p => p.id === activeProfileId)) activeProfileId = profiles[0]?.id || null;
+if (activeProfileId) loadProfileData(activeProfileId);
 
 // ── Persistence ─────────────────────────────────────────────────────────────
 
 function saveAll() {
+  if (!activeProfileId) return;
   try {
-    localStorage.setItem('polski_mastered',     JSON.stringify(mastered));
-    localStorage.setItem('polski_xp',           xp);
-    localStorage.setItem('polski_streak',       streakDays);
-    localStorage.setItem('polski_last_active',  lastActive);
-    localStorage.setItem('polski_stats',        JSON.stringify(stats));
-    localStorage.setItem('polski_achievements', JSON.stringify(achievements));
+    localStorage.setItem(pk('mastered'),     JSON.stringify(mastered));
+    localStorage.setItem(pk('xp'),           xp);
+    localStorage.setItem(pk('streak'),       streakDays);
+    localStorage.setItem(pk('last_active'),  lastActive);
+    localStorage.setItem(pk('stats'),        JSON.stringify(stats));
+    localStorage.setItem(pk('achievements'), JSON.stringify(achievements));
   } catch(e){}
 }
 
@@ -1109,7 +1279,13 @@ function renderMedals() {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
-updateStatsBar();
+renderProfileBar();
+if (!activeProfileId) {
+  openProfileModal();
+} else {
+  touchStreak();
+  updateStatsBar();
+}
 buildTopicBar();
 renderFlash();
 </script>
