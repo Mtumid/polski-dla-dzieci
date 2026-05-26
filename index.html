@@ -110,7 +110,7 @@
     .flashcard:active { transform: translateY(2px); box-shadow: 0 1px 0 #e0e0e0; }
     .word-pl {
       font-family: 'Fredoka One', cursive; font-size: 52px;
-      color: #c0392b; margin-bottom: 4px; display: inline-block;
+      color: #c0392b; margin-bottom: 6px;
     }
     body.calm .word-pl { color: #8b6458; }
     .word-hint { font-size: 15px; color: #bbb; font-style: italic; margin-bottom: 1rem; }
@@ -303,6 +303,29 @@
       font-size: 26px; min-height: 38px; margin-bottom: 0.5rem;
     }
 
+    /* Flex row wrapping the scramble English prompt + its audio button */
+    .scram-q-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin-bottom: 4px;
+    }
+    .scram-q-row .scram-prompt { margin-bottom: 0; }
+
+    /* ── TOPIC-COMPLETE CHALLENGE CARD ──────────────── */
+    .challenge-card {
+      background: #fef3e2; border: 2px solid #e67e22;
+      border-radius: 18px; padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 0 #d4894a; margin-top: 1rem;
+    }
+    body.calm .challenge-card {
+      background: #f0e8d8; border-color: #c8a840; box-shadow: 0 4px 0 #b89030;
+    }
+    .challenge-card h3 {
+      font-family: 'Fredoka One', cursive; font-size: 20px;
+      color: #e67e22; margin-bottom: 0.5rem;
+    }
+    body.calm .challenge-card h3 { color: #c8a840; }
+    .challenge-card p { font-size: 15px; color: #555; line-height: 1.5; }
+
     /* ── END SCREEN ─────────────────────────────── */
     .end-wrap { padding: 0.25rem 0; }
     .end-title {
@@ -408,10 +431,8 @@
     <div class="card-area">
       <div class="flashcard" onclick="flipCard()" id="flashcard">
         <div class="mastered-star" id="masteredStar">⭐</div>
-        <div>
-          <span class="word-pl" id="fPL">—</span>
-          <button class="audio-btn" onclick="event.stopPropagation(); speakPolish(document.getElementById('fPL').textContent)" title="Hear pronunciation">🔊</button>
-        </div>
+        <div class="word-pl" id="fPL">—</div>
+        <button class="audio-btn" id="flashAudioBtn" title="Hear pronunciation">🔊</button>
         <div class="word-hint" id="fHint"></div>
         <div class="word-en" id="fEN"></div>
         <div class="flip-hint" id="fFlipHint">tap to reveal</div>
@@ -423,6 +444,11 @@
       <button onclick="nextCard()">Next →</button>
     </div>
     <button class="got-it-btn" id="gotItBtn" onclick="toggleGotIt()">⭐ Mark as learned</button>
+    <!-- Shown when every word in the topic is marked as learned -->
+    <div class="challenge-card" id="challengeCard" style="display:none">
+      <h3>🏠 Dzisiejsze wyzwanie!</h3>
+      <p id="challengeCardText"></p>
+    </div>
   </div>
 
   <!-- QUIZ MODE -->
@@ -464,7 +490,10 @@
       <span class="score-pill score-right">✓ <span id="sRight">0</span></span>
       <span class="score-pill score-wrong">✗ <span id="sWrong">0</span></span>
     </div>
-    <div class="scram-prompt" id="scramPrompt">—</div>
+    <div class="scram-q-row">
+      <div class="scram-prompt" id="scramPrompt">—</div>
+      <button class="audio-btn" id="scramAudioBtn" title="Hear the Polish word">🔊</button>
+    </div>
     <div class="scram-sub" id="scramSub">Spell the Polish word</div>
     <div class="scram-answer" id="scramAnswer"></div>
     <div class="scram-bank" id="scramBank"></div>
@@ -518,6 +547,8 @@ const vocab = {
     {pl:"Przepraszam",en:"Sorry / Excuse me",hint:"psheh-PRAH-shahm"},
     {pl:"Tak",en:"Yes",hint:"tahk"},
     {pl:"Nie",en:"No",hint:"nyeh"},
+    {pl:"Jak się nazywasz?",en:"What's your name?",hint:"yak sheh na-ZY-vash"},
+    {pl:"Mam na imię…",en:"My name is…",hint:"mam na EE-myeh"},
   ],
   numbers: [
     {pl:"Jeden",en:"One",hint:"YEH-den"},
@@ -530,6 +561,16 @@ const vocab = {
     {pl:"Osiem",en:"Eight",hint:"OH-shyem"},
     {pl:"Dziewięć",en:"Nine",hint:"djeh-VYENCH"},
     {pl:"Dziesięć",en:"Ten",hint:"djeh-SHENCH"},
+    {pl:"Jedenaście",en:"Eleven",hint:"yeh-deh-NASH-cheh"},
+    {pl:"Dwanaście",en:"Twelve",hint:"dva-NASH-cheh"},
+    {pl:"Trzynaście",en:"Thirteen",hint:"tshi-NASH-cheh"},
+    {pl:"Czternaście",en:"Fourteen",hint:"chter-NASH-cheh"},
+    {pl:"Piętnaście",en:"Fifteen",hint:"pyent-NASH-cheh"},
+    {pl:"Szesnaście",en:"Sixteen",hint:"shes-NASH-cheh"},
+    {pl:"Siedemnaście",en:"Seventeen",hint:"sheh-dem-NASH-cheh"},
+    {pl:"Osiemnaście",en:"Eighteen",hint:"oh-shem-NASH-cheh"},
+    {pl:"Dziewiętnaście",en:"Nineteen",hint:"djeh-vyent-NASH-cheh"},
+    {pl:"Dwadzieścia",en:"Twenty",hint:"dva-DJESH-cha"},
   ],
   colours: [
     {pl:"Czerwony",en:"Red",hint:"cher-VOH-ny"},
@@ -540,6 +581,8 @@ const vocab = {
     {pl:"Biały",en:"White",hint:"BYAH-wy"},
     {pl:"Różowy",en:"Pink",hint:"ROO-zhoh-vy"},
     {pl:"Pomarańczowy",en:"Orange",hint:"po-ma-RAHN-choh-vy"},
+    {pl:"Fioletowy",en:"Purple",hint:"fyoh-leh-TOH-vy"},
+    {pl:"Brązowy",en:"Brown",hint:"bron-ZOH-vy"},
   ],
   family: [
     {pl:"Mama",en:"Mum",hint:"MAH-ma"},
@@ -548,8 +591,10 @@ const vocab = {
     {pl:"Dziadek",en:"Grandad",hint:"JA-deck"},
     {pl:"Brat",en:"Brother",hint:"braht"},
     {pl:"Siostra",en:"Sister",hint:"SHOS-tra"},
-    {pl:"Pies",en:"Dog",hint:"pyess"},
-    {pl:"Kot",en:"Cat",hint:"kot"},
+    {pl:"Wujek",en:"Uncle",hint:"VOO-yek"},
+    {pl:"Ciocia",en:"Aunt",hint:"CHOH-chya"},
+    {pl:"Kuzyn",en:"Cousin (boy)",hint:"KOO-zyn"},
+    {pl:"Kuzynka",en:"Cousin (girl)",hint:"koo-ZYN-ka"},
   ],
   food: [
     {pl:"Chleb",en:"Bread",hint:"hlep"},
@@ -624,15 +669,15 @@ const topicLabels = {
 };
 
 const homeChallenges = {
-  greetings: "Ask someone: Jak się masz? (How are you?) See if they can answer in Polish!",
-  numbers:   "Count the stairs (or steps on the way to school) in Polish today!",
-  colours:   "Point to 5 things around you and say their colour in Polish!",
-  family:    "Show someone your family photos and name each person in Polish!",
-  food:      "At dinner tonight, try to name everything on your plate in Polish!",
-  animals:   "Find 3 animals in a book, toy, or outside and name them in Polish!",
-  school:    "Name 5 things in your school bag in Polish before you pack it!",
-  clothes:   "Name each item of clothing as you get dressed today — in Polish!",
-  weather:   "What's the weather like today? Tell someone in Polish!",
+  greetings: "Greet Tata in three different ways in Polish today. Bonus: teach Mum one new greeting!",
+  numbers:   "Count 20 things in Polish with Tata. Then teach Mum to count to 5!",
+  colours:   "Point to 5 things at home and tell Tata their colour in Polish. Can you teach Mum two colours?",
+  family:    "Show Tata a family photo and name everyone in Polish (mama, tata, babcia…). Take turns!",
+  food:      "Name everything on your plate in Polish at dinner. Tata answers in Polish; Mum guesses in English!",
+  animals:   "Pick three animals and act them out for Tata — he says the Polish name. Then teach Mum one Polish animal name.",
+  school:    "Pack your school bag and name every item in Polish. Race Tata!",
+  clothes:   "Get dressed in the morning and name each item in Polish to Tata. Bonus: teach Mum one item.",
+  weather:   "Look out of the window with Tata and describe today's weather in Polish. Teach Mum to say one weather word.",
 };
 
 // ── PERSISTENT STATE ──────────────────────────────────────────────────────────
@@ -684,6 +729,7 @@ function init() {
     document.getElementById('calmBtn').textContent = '☀️';
     document.getElementById('calmBtn').classList.add('on');
   }
+  initAudio();
   updateStats();
   buildTopicBar();
   renderFlash();
@@ -776,13 +822,65 @@ function togglePractice() {
 }
 
 // ── AUDIO ─────────────────────────────────────────────────────────────────────
+let polishVoice    = null;  // cached once voices load
+let audioReady     = false;
+let autoSpeakTimer = null;  // debounce handle for flashcard auto-speak
+
+function initAudio() {
+  if (!window.speechSynthesis) { hideAudioButtons(); return; }
+  tryPickVoice();
+  // Voices load asynchronously in most browsers
+  window.speechSynthesis.addEventListener('voiceschanged', tryPickVoice);
+}
+
+function tryPickVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return; // not ready yet — voiceschanged will re-fire
+
+  // Prefer the better Polish voices available on Edge/Chrome/Windows
+  const preferred = ['zofia', 'paulina', 'agnieszka'];
+  let picked = null;
+  for (const name of preferred) {
+    picked = voices.find(v => v.lang.startsWith('pl') && v.name.toLowerCase().includes(name));
+    if (picked) break;
+  }
+  // Fall back to any pl-PL voice — do NOT fall back to a non-Polish voice
+  if (!picked) picked = voices.find(v => v.lang.startsWith('pl')) || null;
+
+  if (picked) {
+    polishVoice = picked;
+    audioReady  = true;
+    showAudioButtons();
+  } else {
+    console.info('Polski dla dzieci: no pl-PL TTS voice found — audio buttons hidden.');
+    audioReady = false;
+    hideAudioButtons();
+  }
+}
+
+function isAudioReady() { return audioReady; }
+
 function speakPolish(text) {
-  if (!text || !window.speechSynthesis) return;
+  if (!text || !audioReady) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'pl-PL';
-  u.rate = 0.85;
+  u.voice  = polishVoice;
+  u.lang   = 'pl-PL';
+  u.rate   = 0.85;
+  u.pitch  = 1.0;
+  u.volume = 1.0;
   window.speechSynthesis.speak(u);
+}
+
+function hideAudioButtons() {
+  document.querySelectorAll('.audio-btn').forEach(b => b.style.display = 'none');
+}
+
+function showAudioButtons() {
+  // Restore all audio buttons except the quiz one (that is direction-controlled per question)
+  document.querySelectorAll('.audio-btn').forEach(b => {
+    if (b.id !== 'quizAudioBtn') b.style.display = '';
+  });
 }
 
 // ── PRAISE ────────────────────────────────────────────────────────────────────
@@ -831,6 +929,15 @@ function setMastered(topic, pl, val) {
 }
 function masteredCount(topic) {
   return mastered[topic] ? Object.keys(mastered[topic]).length : 0;
+}
+
+// Show the home-challenge card when every word in the topic has been marked as learned
+function renderChallengeCard() {
+  if (currentMode !== 'flash') return;
+  const complete = masteredCount(currentTopic) >= vocab[currentTopic].length;
+  const card = document.getElementById('challengeCard');
+  card.style.display = complete ? 'block' : 'none';
+  if (complete) document.getElementById('challengeCardText').textContent = homeChallenges[currentTopic];
 }
 
 // ── TOPIC BAR ─────────────────────────────────────────────────────────────────
@@ -893,6 +1000,12 @@ function renderFlash() {
   document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' / ' + words.length;
   cardFlipped = false;
   updateGotItBtn();
+  renderChallengeCard();
+  // Wire audio button to the current word (onclick set here, not inline in HTML)
+  document.getElementById('flashAudioBtn').onclick = e => { e.stopPropagation(); speakPolish(w.pl); };
+  // Auto-speak with 250ms debounce so rapid Next-clicking doesn't stack utterances
+  clearTimeout(autoSpeakTimer);
+  autoSpeakTimer = setTimeout(() => speakPolish(w.pl), 250);
 }
 
 function updateGotItBtn() {
@@ -910,6 +1023,7 @@ function toggleGotIt() {
   if (!wasLearned) awardXP(5, document.getElementById('gotItBtn'));
   updateGotItBtn();
   buildTopicBar();
+  renderChallengeCard();
   if (!wasLearned) setTimeout(() => nextCard(), 350);
 }
 
@@ -919,6 +1033,7 @@ function flipCard() {
     document.getElementById('fEN').textContent = w.en;
     document.getElementById('fFlipHint').textContent = '';
     cardFlipped = true;
+    speakPolish(w.pl); // one extra reinforcement when they reveal the meaning
   } else {
     document.getElementById('fEN').textContent = '';
     document.getElementById('fFlipHint').textContent = 'tap to reveal';
@@ -963,9 +1078,10 @@ function nextQuiz() {
   document.getElementById('quizSub').textContent =
     currentDirPLtoEN ? '(' + current.hint + ')' : 'What is this in Polish?';
 
-  // Audio button speaks the Polish word (useful in both directions)
+  // Show audio only for Polish→English questions (would give away the answer in the other direction)
   const audioBtn = document.getElementById('quizAudioBtn');
   audioBtn.onclick = () => speakPolish(current.pl);
+  audioBtn.style.display = (currentDirPLtoEN && isAudioReady()) ? '' : 'none';
 
   const wrongs = shuffle(words.filter(w => w.pl !== current.pl)).slice(0, 3);
   const opts   = shuffle([current, ...wrongs]);
@@ -1157,6 +1273,8 @@ function nextScramble() {
 
   document.getElementById('scramPrompt').textContent = scramWord.en;
   document.getElementById('scramSub').textContent    = 'Spell the Polish word';
+  // Wire audio button so they can hear the target Polish word at any point
+  document.getElementById('scramAudioBtn').onclick   = () => speakPolish(scramWord.pl);
 
   const chars = [...scramWord.pl];
   scramLetters = chars.map((char, id) => ({char, id}));
