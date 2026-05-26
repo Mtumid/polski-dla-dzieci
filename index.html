@@ -270,10 +270,10 @@
       min-height: 56px; align-items: center;
     }
     .scram-slot {
-      width: 42px; height: 50px; border-radius: 10px;
+      width: var(--tile-w, 42px); height: var(--tile-h, 50px); border-radius: 10px;
       border: 2px dashed #ddd; background: #fafafa;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: 20px;
+      font-family: 'Fredoka One', cursive; font-size: var(--tile-fs, 20px);
       color: #c0392b; transition: all 0.15s;
     }
     .scram-slot.filled { border-style: solid; border-color: #c0392b; background: #fff5f5; cursor: pointer; }
@@ -287,10 +287,10 @@
       justify-content: center; margin-bottom: 1rem; min-height: 56px;
     }
     .scram-tile {
-      width: 42px; height: 50px; border-radius: 10px;
+      width: var(--tile-w, 42px); height: var(--tile-h, 50px); border-radius: 10px;
       border: 2px solid #3498db; background: #ebf5fb;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: 20px;
+      font-family: 'Fredoka One', cursive; font-size: var(--tile-fs, 20px);
       color: #2980b9; cursor: pointer; transition: all 0.15s;
       user-select: none; touch-action: manipulation;
     }
@@ -409,6 +409,7 @@
     <div class="stats-spacer"></div>
     <span class="shield-tip" id="shieldTip" title="Streak shield active!" style="display:none">🛡️</span>
     <button class="icon-btn" id="practiceBtn" onclick="togglePractice()" title="Practice mode — no pressure">📖</button>
+    <button class="icon-btn" onclick="resetStudyHints()" title="Reset tricky-word hints">↺</button>
     <button class="icon-btn" id="calmBtn" onclick="toggleCalm()" title="Calm mode">🌙</button>
   </div>
 
@@ -837,6 +838,9 @@ function tryPickVoice() {
   const voices = window.speechSynthesis.getVoices();
   if (!voices.length) return; // not ready yet — voiceschanged will re-fire
 
+  // Once we have a non-empty voice list the situation is determined; stop listening
+  window.speechSynthesis.removeEventListener('voiceschanged', tryPickVoice);
+
   // Prefer the better Polish voices available on Edge/Chrome/Windows
   const preferred = ['zofia', 'paulina', 'agnieszka'];
   let picked = null;
@@ -923,9 +927,22 @@ function saveMastered() {
 function isMastered(topic, pl) { return !!(mastered[topic] && mastered[topic][pl]); }
 function setMastered(topic, pl, val) {
   if (!mastered[topic]) mastered[topic] = {};
-  if (val) mastered[topic][pl] = true;
-  else delete mastered[topic][pl];
+  if (val) {
+    mastered[topic][pl] = true;
+    if (wrongWords[topic]) {
+      delete wrongWords[topic][pl];
+      try { localStorage.setItem('polski_wrong_words', JSON.stringify(wrongWords)); } catch(e) {}
+    }
+  } else {
+    delete mastered[topic][pl];
+  }
   saveMastered();
+}
+
+function resetStudyHints() {
+  if (!confirm('Reset study hints? Tricky-word tracking will start fresh.')) return;
+  wrongWords = {};
+  try { localStorage.removeItem('polski_wrong_words'); } catch(e) {}
 }
 function masteredCount(topic) {
   return mastered[topic] ? Object.keys(mastered[topic]).length : 0;
@@ -1072,7 +1089,8 @@ function nextQuiz() {
   const current = quizPool.pop();
   currentQuizWord = current;
 
-  currentDirPLtoEN = Math.random() > 0.5;
+  const PLtoEN_BIAS = { numbers: 0.75, weather: 0.75, colours: 0.65 };
+  currentDirPLtoEN = Math.random() < (PLtoEN_BIAS[currentTopic] || 0.6);
   document.getElementById('quizQ').textContent =
     currentDirPLtoEN ? current.pl : current.en;
   document.getElementById('quizSub').textContent =
@@ -1259,6 +1277,14 @@ function handleMatch(btn) {
 }
 
 // ── SCRAMBLE ──────────────────────────────────────────────────────────────────
+function computeScramTileSize(n) {
+  const avail = Math.min(window.innerWidth - 32, 540);
+  const w = Math.max(28, Math.min(42, Math.floor((avail - (n - 1) * 5) / n)));
+  document.documentElement.style.setProperty('--tile-w', w + 'px');
+  document.documentElement.style.setProperty('--tile-h', Math.round(w * 1.2) + 'px');
+  document.documentElement.style.setProperty('--tile-fs', Math.max(13, Math.round(w * 0.47)) + 'px');
+}
+
 function nextScramble() {
   scramAnswered = false;
   document.getElementById('scramNext').style.display = 'none';
@@ -1270,6 +1296,7 @@ function nextScramble() {
 
   if (scramPool.length === 0) scramPool = shuffle([...words]);
   scramWord = scramPool.pop();
+  computeScramTileSize([...scramWord.pl].length);
 
   document.getElementById('scramPrompt').textContent = scramWord.en;
   document.getElementById('scramSub').textContent    = 'Spell the Polish word';
