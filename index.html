@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Polski dla dzieci 🇵🇱</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,7 +30,7 @@
       justify-content: space-between;
     }
     body.calm .header { background: #8b6458; }
-    .header h1 { font-family: 'Fredoka One', cursive; font-size: 26px; color: #fff; }
+    .header h1 { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 26px; color: #fff; }
     .header span { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 700; }
 
     /* ── STATS BAR ──────────────────────────────── */
@@ -48,7 +48,7 @@
       display: flex; align-items: center; gap: 4px;
       color: #fff; font-size: 13px; font-weight: 700; white-space: nowrap;
     }
-    .stat-value { font-family: 'Fredoka One', cursive; font-size: 17px; }
+    .stat-value { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 17px; }
     .stats-spacer { flex: 1; }
     .icon-btn {
       background: rgba(255,255,255,0.18);
@@ -109,7 +109,7 @@
     .flashcard:hover { transform: translateY(-2px); }
     .flashcard:active { transform: translateY(2px); box-shadow: 0 1px 0 #e0e0e0; }
     .word-pl {
-      font-family: 'Fredoka One', cursive; font-size: 52px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 52px;
       color: #c0392b; margin-bottom: 6px;
     }
     body.calm .word-pl { color: #8b6458; }
@@ -177,12 +177,12 @@
       display: flex; align-items: center; justify-content: center;
       gap: 10px; margin-bottom: 6px;
     }
-    .quiz-q { font-family: 'Fredoka One', cursive; font-size: 40px; color: #c0392b; text-align: center; }
+    .quiz-q { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 40px; color: #c0392b; text-align: center; }
     body.calm .quiz-q { color: #8b6458; }
     .quiz-sub { font-size: 14px; color: #bbb; text-align: center; margin-bottom: 0.75rem; font-style: italic; }
 
     .praise-msg {
-      text-align: center; font-family: 'Fredoka One', cursive;
+      text-align: center; font-family: 'Fredoka', cursive; font-weight: 700;
       font-size: 22px; min-height: 32px; margin-bottom: 0.75rem;
       color: #27ae60;
     }
@@ -208,7 +208,7 @@
 
     .next-btn {
       width: 100%; padding: 14px; border-radius: 12px; border: none;
-      background: #3498db; color: #fff; font-family: 'Fredoka One', cursive;
+      background: #3498db; color: #fff; font-family: 'Fredoka', cursive; font-weight: 700;
       font-size: 22px; cursor: pointer; transition: background 0.15s; display: none;
       touch-action: manipulation;
     }
@@ -243,7 +243,7 @@
     .match-btn.wrong-shake:not(.calm-mode) { animation: shake 0.3s; }
     .match-result {
       text-align: center; padding: 1.5rem;
-      font-family: 'Fredoka One', cursive; font-size: 30px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 30px;
       color: #27ae60; display: none;
     }
     .reset-btn {
@@ -256,7 +256,7 @@
 
     /* ── SCRAMBLE ───────────────────────────────── */
     .scram-prompt {
-      font-family: 'Fredoka One', cursive; font-size: 38px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 38px;
       color: #c0392b; text-align: center; margin-bottom: 4px;
     }
     body.calm .scram-prompt { color: #8b6458; }
@@ -273,7 +273,7 @@
       width: var(--tile-w, 42px); height: var(--tile-h, 50px); border-radius: 10px;
       border: 2px dashed #ddd; background: #fafafa;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: var(--tile-fs, 20px);
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: var(--tile-fs, 20px);
       color: #c0392b; transition: all 0.15s;
     }
     .scram-slot.filled { border-style: solid; border-color: #c0392b; background: #fff5f5; cursor: pointer; }
@@ -290,7 +290,7 @@
       width: var(--tile-w, 42px); height: var(--tile-h, 50px); border-radius: 10px;
       border: 2px solid #3498db; background: #ebf5fb;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: var(--tile-fs, 20px);
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: var(--tile-fs, 20px);
       color: #2980b9; cursor: pointer; transition: all 0.15s;
       user-select: none; touch-action: manipulation;
     }
@@ -299,7 +299,7 @@
     body.calm .scram-tile { border-color: #7a9abf; background: #e8eef5; color: #5a7a9f; }
     body.calm .scram-tile:hover { background: #7a9abf; color: #fff; transform: none; }
     .scram-feedback {
-      text-align: center; font-family: 'Fredoka One', cursive;
+      text-align: center; font-family: 'Fredoka', cursive; font-weight: 700;
       font-size: 26px; min-height: 38px; margin-bottom: 0.5rem;
     }
 
@@ -320,7 +320,7 @@
       background: #f0e8d8; border-color: #c8a840; box-shadow: 0 4px 0 #b89030;
     }
     .challenge-card h3 {
-      font-family: 'Fredoka One', cursive; font-size: 20px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 20px;
       color: #e67e22; margin-bottom: 0.5rem;
     }
     body.calm .challenge-card h3 { color: #c8a840; }
@@ -329,7 +329,7 @@
     /* ── END SCREEN ─────────────────────────────── */
     .end-wrap { padding: 0.25rem 0; }
     .end-title {
-      font-family: 'Fredoka One', cursive; font-size: 36px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 36px;
       color: #c0392b; text-align: center; margin-bottom: 0.35rem;
     }
     body.calm .end-title { color: #8b6458; }
@@ -341,7 +341,7 @@
       background: #fff; border-radius: 14px; padding: 1rem;
       border: 2px solid #f0f0f0; text-align: center;
     }
-    .end-stat-num { font-family: 'Fredoka One', cursive; font-size: 32px; color: #c0392b; display: block; }
+    .end-stat-num { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 32px; color: #c0392b; display: block; }
     body.calm .end-stat-num { color: #8b6458; }
     .end-stat-label { font-size: 11px; color: #bbb; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .end-challenge {
@@ -357,7 +357,7 @@
     .play-again-btn {
       width: 100%; padding: 16px; border-radius: 14px;
       border: none; background: #c0392b; color: #fff;
-      font-family: 'Fredoka One', cursive; font-size: 24px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 24px;
       cursor: pointer; transition: background 0.15s; touch-action: manipulation;
     }
     .play-again-btn:hover { background: #a93226; }
@@ -367,7 +367,7 @@
     /* ── XP POP ─────────────────────────────────── */
     .xp-pop {
       position: fixed; pointer-events: none; z-index: 999;
-      font-family: 'Fredoka One', cursive; font-size: 20px;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 20px;
       color: #f39c12; text-shadow: 0 1px 4px rgba(0,0,0,0.18);
       animation: xpFloat 0.9s ease-out forwards;
     }
@@ -390,15 +390,64 @@
     /* ── PANELS ─────────────────────────────────── */
     .panel { display: none; }
     .panel.active { display: block; }
+
+    /* ── PROFILE PICKER ─────────────────────────── */
+    .profile-picker {
+      position: fixed; inset: 0; z-index: 200;
+      background: #fdf6ec;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    body.calm .profile-picker { background: #f0eeea; }
+    .profile-picker-inner { width: 100%; max-width: 480px; text-align: center; }
+    .profile-picker-title {
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 30px;
+      color: #c0392b; margin-bottom: 0.3rem;
+    }
+    body.calm .profile-picker-title { color: #8b6458; }
+    .profile-picker-sub { font-size: 15px; color: #888; font-weight: 600; margin-bottom: 2rem; }
+    .profile-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .profile-card {
+      display: flex; flex-direction: column; align-items: center;
+      background: #fff; border: 3px solid #eee; border-radius: 20px;
+      padding: 1.5rem 2.5rem; cursor: pointer; transition: all 0.18s;
+      touch-action: manipulation; box-shadow: 0 4px 0 #e0e0e0;
+      font-family: 'Nunito', sans-serif;
+    }
+    .profile-card:hover { border-color: #c0392b; transform: translateY(-4px); box-shadow: 0 8px 0 #d8c8c8; outline: none; }
+    .profile-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka', cursive; font-weight: 700; font-size: 36px; color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .profile-card-name { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 26px; color: #333; margin-bottom: 0.3rem; }
+    .profile-card-stats { font-size: 12px; color: #aaa; font-weight: 700; }
   </style>
 </head>
 <body>
+
+<!-- PROFILE PICKER
+     Soft profile switcher — data lives in localStorage and is NOT password-protected.
+     Purpose: keep sibling progress separate, not enforce privacy.
+     Edit the PROFILES array near the top of the <script> to change names. -->
+<div id="profilePicker" class="profile-picker">
+  <div class="profile-picker-inner">
+    <div class="profile-picker-title">Kto się uczy dzisiaj?</div>
+    <div class="profile-picker-sub">Who's learning today?</div>
+    <div class="profile-cards" id="profileCards"></div>
+  </div>
+</div>
+
 <div class="app">
 
   <!-- HEADER -->
   <div class="header">
     <h1>Polski dla dzieci 🇵🇱</h1>
-    <span>Polish for kids</span>
+    <div style="text-align:right;line-height:1.4">
+      <div id="headerProfileName" style="font-family:'Fredoka',cursive;font-weight:700;font-size:17px;color:#fff;letter-spacing:0.3px"></div>
+      <button onclick="showProfilePicker()" style="font-size:11px;color:rgba(255,255,255,0.7);background:none;border:none;cursor:pointer;padding:0;font-family:'Nunito',sans-serif;font-weight:700;touch-action:manipulation">Switch ▸</button>
+    </div>
   </div>
 
   <!-- STATS BAR -->
@@ -406,6 +455,7 @@
     <div class="stat-item">🔥&thinsp;<span class="stat-value" id="statStreak">0</span></div>
     <div class="stat-item">⭐&thinsp;<span class="stat-value" id="statXP">0</span> XP</div>
     <div class="stat-item">Lv.<span class="stat-value" id="statLevel">1</span></div>
+    <div class="stat-item" id="srsDueItem" style="display:none">📚&thinsp;<span class="stat-value" id="srsDueCount">0</span> due</div>
     <div class="stats-spacer"></div>
     <span class="shield-tip" id="shieldTip" title="Streak shield active!" style="display:none">🛡️</span>
     <button class="icon-btn" id="practiceBtn" onclick="togglePractice()" title="Practice mode — no pressure">📖</button>
@@ -681,16 +731,28 @@ const homeChallenges = {
   weather:   "Look out of the window with Tata and describe today's weather in Polish. Teach Mum to say one weather word.",
 };
 
+// ── PROFILES ──────────────────────────────────────────────────────────────────
+// ← Edit this list to add / remove profiles shown on the picker screen.
+// Each entry: { name (also the localStorage key prefix), colour, avatar emoji }
+// NOTE: This is a SOFT switcher — data is in localStorage only, no passwords.
+//       It exists to separate sibling progress, not to enforce privacy.
+const PROFILES = [
+  { name: 'Capybara',   colour: '#3498db', avatar: '🦫' },
+  { name: 'Cool Robot', colour: '#c0392b', avatar: '🤖' },
+  { name: 'Test',       colour: '#27ae60', avatar: '🧪' },
+];
+
 // ── PERSISTENT STATE ──────────────────────────────────────────────────────────
-let xp       = parseInt(localStorage.getItem('polski_xp')     || '0');
-let streak   = parseInt(localStorage.getItem('polski_streak') || '0');
-let lastPlayed = localStorage.getItem('polski_last_played') || '';
-let shieldActive = localStorage.getItem('polski_shield') === 'true';
-let calmMode   = localStorage.getItem('polski_calm')   === 'true';
-let mastered   = {};
-let wrongWords = {};
-try { mastered   = JSON.parse(localStorage.getItem('polski_mastered')    || '{}'); } catch(e) {}
-try { wrongWords = JSON.parse(localStorage.getItem('polski_wrong_words') || '{}'); } catch(e) {}
+// Per-profile values are initialised to safe defaults here and loaded by loadProfile().
+let xp           = 0;
+let streak       = 0;
+let lastPlayed   = '';
+let shieldActive = false;
+let calmMode     = localStorage.getItem('polski_calm') === 'true'; // global — not per-profile
+let mastered     = {};
+let wrongWords   = {};
+let srsData      = {}; // Leitner records: { topic: { pl: { box, due } } }
+let currentProfile = ''; // set by pickProfile()
 
 // ── RUNTIME STATE ─────────────────────────────────────────────────────────────
 const topics = Object.keys(vocab);
@@ -723,13 +785,110 @@ const praiseCorrect = ['Świetnie! 🌟','Brawo! 🎉','Tak jest! ✅','Doskonal
 const praiseAlmost  = ['Prawie! 🤔','Spróbuj jeszcze raz! 💪','Nie szkodzi! 😊'];
 let praiseIdx = 0;
 
+// Leitner box intervals (milliseconds). Edit here to tune review cadence.
+// Box 1 is the "requeue delay" — short so wrong words resurface later in the same session.
+const SRS_INTERVALS = [
+  0,                     // (unused — boxes are 1-indexed)
+  5  * 60  * 1000,       // box 1:  5 min  — requeue delay after a wrong answer
+  1  * 86400 * 1000,     // box 2:  1 day
+  3  * 86400 * 1000,     // box 3:  3 days
+  7  * 86400 * 1000,     // box 4:  7 days
+  14 * 86400 * 1000,     // box 5: 14 days
+];
+
+// ── PROFILE FUNCTIONS ─────────────────────────────────────────────────────────
+// Helper — prefix any storage key with the active profile name.
+function pk(key) { return key + '_' + currentProfile; }
+
+// One-time migration: when old shared (un-prefixed) mastery data is found,
+// copy it to every profile so no twin loses their starred words.
+function migrateSharedData() {
+  if (localStorage.getItem('polski_migration_done')) return;
+  const oldMastered = localStorage.getItem('polski_mastered');
+  const oldWrong    = localStorage.getItem('polski_wrong_words');
+  if (oldMastered || oldWrong) {
+    PROFILES.forEach(({ name }) => {
+      if (oldMastered && !localStorage.getItem('polski_mastered_'    + name))
+        localStorage.setItem('polski_mastered_'    + name, oldMastered);
+      if (oldWrong    && !localStorage.getItem('polski_wrong_words_' + name))
+        localStorage.setItem('polski_wrong_words_' + name, oldWrong);
+    });
+  }
+  localStorage.setItem('polski_migration_done', '1');
+}
+
+// Load per-profile state into JS variables (called by pickProfile).
+function loadProfile(name) {
+  currentProfile = name;
+  xp           = parseInt(localStorage.getItem(pk('polski_xp'))          || '0');
+  streak       = parseInt(localStorage.getItem(pk('polski_streak'))      || '0');
+  lastPlayed   =          localStorage.getItem(pk('polski_last_played')) || '';
+  shieldActive =          localStorage.getItem(pk('polski_shield'))     === 'true';
+  mastered   = {};
+  wrongWords = {};
+  srsData    = {};
+  try { mastered   = JSON.parse(localStorage.getItem(pk('polski_mastered'))    || '{}'); } catch(e) {}
+  try { wrongWords = JSON.parse(localStorage.getItem(pk('polski_wrong_words')) || '{}'); } catch(e) {}
+  try { srsData    = JSON.parse(localStorage.getItem(pk('polski_srs'))         || '{}'); } catch(e) {}
+}
+
+// Render the profile-picker cards (called at startup and when re-opening the picker).
+function buildProfileCards() {
+  const container = document.getElementById('profileCards');
+  container.innerHTML = '';
+  PROFILES.forEach(({ name, colour, avatar }) => {
+    const profXP     = parseInt(localStorage.getItem('polski_xp_'     + name) || '0');
+    const profStreak = parseInt(localStorage.getItem('polski_streak_' + name) || '0');
+    const card = document.createElement('button');
+    card.className = 'profile-card';
+    card.onclick = () => pickProfile(name);
+    card.innerHTML =
+      '<div class="profile-avatar" style="background:' + colour + '">' + avatar + '</div>' +
+      '<div class="profile-card-name">' + name + '</div>' +
+      '<div class="profile-card-stats">' +
+        (profStreak > 0 ? '🔥' + profStreak + '&thinsp;·&thinsp;' : '') +
+        '⭐ ' + profXP + ' XP' +
+      '</div>';
+    container.appendChild(card);
+  });
+}
+
+// Select a profile: load its data, hide the picker, reset game state, launch app.
+function pickProfile(name) {
+  loadProfile(name);
+  localStorage.setItem('polski_active_profile', name);
+  document.getElementById('headerProfileName').textContent = name;
+  document.getElementById('profilePicker').style.display  = 'none';
+  // Reset all transient game state for a clean start on every profile switch.
+  currentTopic = 'greetings';
+  currentMode  = 'flash';
+  cardIdx = 0; cardFlipped = false;
+  quizPool = []; roundQNum = 0; roundXP = 0; roundRight = 0; qRight = 0; qWrong = 0;
+  scramPool = []; scramRight = 0; scramWrong = 0;
+  matchSelected = null; matchPool = []; matchedCount = 0;
+  practiceMode = false;
+  document.getElementById('practiceBtn').classList.remove('on');
+  document.getElementById('practiceBanner').classList.remove('show');
+  document.getElementById('quizScoreRow').style.opacity  = '1';
+  document.getElementById('scramScoreRow').style.opacity = '1';
+  ['flash','quiz','match','scram'].forEach(n =>
+    document.getElementById(n + 'Mode').classList.toggle('active', n === 'flash'));
+  document.getElementById('endScreen').classList.remove('active');
+  document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+  init();
+}
+
+// Re-open the picker (Switch button in header).
+function showProfilePicker() {
+  buildProfileCards(); // refresh live XP/streak stats
+  document.getElementById('profilePicker').style.display = 'flex';
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function init() {
-  if (calmMode) {
-    document.body.classList.add('calm');
-    document.getElementById('calmBtn').textContent = '☀️';
-    document.getElementById('calmBtn').classList.add('on');
-  }
+  document.body.classList.toggle('calm', calmMode);
+  document.getElementById('calmBtn').textContent = calmMode ? '☀️' : '🌙';
+  document.getElementById('calmBtn').classList.toggle('on', calmMode);
   initAudio();
   updateStats();
   buildTopicBar();
@@ -750,7 +909,7 @@ function awardXP(amount, triggerEl) {
   if (practiceMode) return;
   xp += amount;
   roundXP += amount;
-  try { localStorage.setItem('polski_xp', xp.toString()); } catch(e) {}
+  try { localStorage.setItem(pk('polski_xp'), xp.toString()); } catch(e) {}
   updateStats();
   if (triggerEl) showXPPop(amount, triggerEl);
 }
@@ -785,20 +944,20 @@ function markPlayedToday() {
   } else if (diff === 2 && shieldActive) {
     streak++;
     shieldActive = false;
-    try { localStorage.setItem('polski_shield', 'false'); } catch(e) {}
+    try { localStorage.setItem(pk('polski_shield'), 'false'); } catch(e) {}
   } else {
     streak = 1;
   }
 
   lastPlayed = today;
   try {
-    localStorage.setItem('polski_last_played', today);
-    localStorage.setItem('polski_streak', streak.toString());
+    localStorage.setItem(pk('polski_last_played'), today);
+    localStorage.setItem(pk('polski_streak'), streak.toString());
   } catch(e) {}
 
   if (streak >= 7 && !shieldActive) {
     shieldActive = true;
-    try { localStorage.setItem('polski_shield', 'true'); } catch(e) {}
+    try { localStorage.setItem(pk('polski_shield'), 'true'); } catch(e) {}
   }
   updateStats();
 }
@@ -825,9 +984,12 @@ function togglePractice() {
 // ── AUDIO ─────────────────────────────────────────────────────────────────────
 let polishVoice    = null;  // cached once voices load
 let audioReady     = false;
+let audioInitDone  = false; // guard: only wire up once across profile switches
 let autoSpeakTimer = null;  // debounce handle for flashcard auto-speak
 
 function initAudio() {
+  if (audioInitDone) return;
+  audioInitDone = true;
   if (!window.speechSynthesis) { hideAudioButtons(); return; }
   tryPickVoice();
   // Voices load asynchronously in most browsers
@@ -917,12 +1079,12 @@ function recordWrongWord(topic, pl) {
   if (practiceMode) return;
   if (!wrongWords[topic]) wrongWords[topic] = {};
   wrongWords[topic][pl] = (wrongWords[topic][pl] || 0) + 1;
-  try { localStorage.setItem('polski_wrong_words', JSON.stringify(wrongWords)); } catch(e) {}
+  try { localStorage.setItem(pk('polski_wrong_words'), JSON.stringify(wrongWords)); } catch(e) {}
 }
 
 // ── MASTERED ─────────────────────────────────────────────────────────────────
 function saveMastered() {
-  try { localStorage.setItem('polski_mastered', JSON.stringify(mastered)); } catch(e) {}
+  try { localStorage.setItem(pk('polski_mastered'), JSON.stringify(mastered)); } catch(e) {}
 }
 function isMastered(topic, pl) { return !!(mastered[topic] && mastered[topic][pl]); }
 function setMastered(topic, pl, val) {
@@ -931,7 +1093,7 @@ function setMastered(topic, pl, val) {
     mastered[topic][pl] = true;
     if (wrongWords[topic]) {
       delete wrongWords[topic][pl];
-      try { localStorage.setItem('polski_wrong_words', JSON.stringify(wrongWords)); } catch(e) {}
+      try { localStorage.setItem(pk('polski_wrong_words'), JSON.stringify(wrongWords)); } catch(e) {}
     }
   } else {
     delete mastered[topic][pl];
@@ -942,7 +1104,7 @@ function setMastered(topic, pl, val) {
 function resetStudyHints() {
   if (!confirm('Reset study hints? Tricky-word tracking will start fresh.')) return;
   wrongWords = {};
-  try { localStorage.removeItem('polski_wrong_words'); } catch(e) {}
+  try { localStorage.removeItem(pk('polski_wrong_words')); } catch(e) {}
 }
 function masteredCount(topic) {
   return mastered[topic] ? Object.keys(mastered[topic]).length : 0;
@@ -955,6 +1117,69 @@ function renderChallengeCard() {
   const card = document.getElementById('challengeCard');
   card.style.display = complete ? 'block' : 'none';
   if (complete) document.getElementById('challengeCardText').textContent = homeChallenges[currentTopic];
+}
+
+// ── SRS (LEITNER BOXES) ───────────────────────────────────────────────────────
+// Storage: polski_srs_<profile> = { topic: { pl: { box:1-5, due:timestamp } } }
+// Words with no record are treated as box 1, due now — always eligible.
+
+function saveSrs() {
+  try { localStorage.setItem(pk('polski_srs'), JSON.stringify(srsData)); } catch(e) {}
+}
+
+function getSrsRec(topic, pl) {
+  return (srsData[topic] && srsData[topic][pl]) || null;
+}
+
+// Correct: promote up one box (max 5), schedule due = now + that box's interval.
+function srsCorrect(topic, pl) {
+  if (practiceMode) return;
+  const now = Date.now();
+  const rec = getSrsRec(topic, pl);
+  const box = rec ? Math.min(rec.box + 1, 5) : 2; // first-ever correct → box 2
+  if (!srsData[topic]) srsData[topic] = {};
+  srsData[topic][pl] = { box, due: now + SRS_INTERVALS[box] };
+  saveSrs();
+  updateDueCount();
+}
+
+// Wrong: reset to box 1, due after short in-session delay so it is never next.
+function srsWrong(topic, pl) {
+  if (practiceMode) return;
+  const now = Date.now();
+  if (!srsData[topic]) srsData[topic] = {};
+  srsData[topic][pl] = { box: 1, due: now + SRS_INTERVALS[1] };
+  saveSrs();
+  updateDueCount();
+}
+
+// Build a pool: due words (due <= now, or unseen) first, then non-due fallback.
+// Use shift() to drain — first element is always the highest-priority word.
+function buildSrsPool(topic, words) {
+  const now = Date.now();
+  const due = [], notDue = [];
+  words.forEach(w => {
+    const rec = getSrsRec(topic, w.pl);
+    if (!rec || rec.due <= now) due.push(w);
+    else notDue.push(w);
+  });
+  return [...shuffle(due), ...shuffle(notDue)];
+}
+
+// Count words due in the given topic (unseen = due).
+function countDue(topic) {
+  const now = Date.now();
+  return vocab[topic].filter(w => {
+    const rec = getSrsRec(topic, w.pl);
+    return !rec || rec.due <= now;
+  }).length;
+}
+
+// Refresh the "X due" pill in the stats bar.
+function updateDueCount() {
+  const n = countDue(currentTopic);
+  document.getElementById('srsDueItem').style.display = n > 0 ? '' : 'none';
+  document.getElementById('srsDueCount').textContent  = n;
 }
 
 // ── TOPIC BAR ─────────────────────────────────────────────────────────────────
@@ -971,6 +1196,7 @@ function buildTopicBar() {
     b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
     bar.appendChild(b);
   });
+  updateDueCount();
 }
 
 // ── MODE SWITCHING ────────────────────────────────────────────────────────────
@@ -1085,8 +1311,8 @@ function nextQuiz() {
     'Question ' + (roundQNum + 1) + ' of ' + ROUND_SIZE;
 
   const words = vocab[currentTopic];
-  if (quizPool.length === 0) quizPool = buildQuizPool(currentTopic);
-  const current = quizPool.pop();
+  if (quizPool.length === 0) quizPool = buildSrsPool(currentTopic, vocab[currentTopic]);
+  const current = quizPool.shift(); // shift() preserves due-first ordering
   currentQuizWord = current;
 
   const PLtoEN_BIAS = { numbers: 0.75, weather: 0.75, colours: 0.65 };
@@ -1123,12 +1349,14 @@ function nextQuiz() {
         document.getElementById('qRight').textContent = qRight;
         awardXP(10, b);
         showPraise(true, 'praiseMsgQuiz');
+        srsCorrect(currentTopic, current.pl);
       } else {
         b.classList.add('wrong');
         qWrong++;
         document.getElementById('qWrong').textContent = qWrong;
         recordWrongWord(currentTopic, current.pl);
         showPraise(false, 'praiseMsgQuiz');
+        srsWrong(currentTopic, current.pl);
         // reveal correct answer
         Array.from(container.children).forEach(btn => {
           if (btn.textContent === (currentDirPLtoEN ? current.en : current.pl))
@@ -1160,7 +1388,7 @@ function showEndScreen() {
   if (!practiceMode) {
     xp += bonus;
     roundXP += bonus;
-    try { localStorage.setItem('polski_xp', xp.toString()); } catch(e) {}
+    try { localStorage.setItem(pk('polski_xp'), xp.toString()); } catch(e) {}
     updateStats();
   }
 
@@ -1212,7 +1440,7 @@ function playAgain() {
 function resetMatch() {
   matchSelected = null; matchedCount = 0;
   const words   = vocab[currentTopic];
-  matchPool = shuffle([...words]).slice(0, 5);
+  matchPool = buildSrsPool(currentTopic, words).slice(0, 5);
   const polishItems = shuffle([...matchPool]);
   const engItems    = shuffle([...matchPool]);
   const grid = document.getElementById('matchGrid');
@@ -1226,7 +1454,7 @@ function resetMatch() {
     const b = document.createElement('button');
     b.className = 'match-btn'; b.textContent = w.pl;
     b.dataset.pl = w.pl; b.dataset.side = 'pl';
-    b.onclick = () => handleMatch(b);
+    b.onclick = () => { if (!b.classList.contains('matched')) speakPolish(w.pl); handleMatch(b); };
     polishCol.appendChild(b);
   });
   engItems.forEach(w => {
@@ -1257,6 +1485,7 @@ function handleMatch(btn) {
       a.classList.remove('selected'); a.classList.add('matched'); a.disabled = true;
       btn.classList.add('matched'); btn.disabled = true;
       awardXP(5, btn);
+      srsCorrect(currentTopic, a.dataset.pl); // correct only — mismatches are not penalised
       matchedCount++;
       if (matchedCount === matchPool.length) {
         document.getElementById('matchResult').style.display = 'block';
@@ -1294,8 +1523,8 @@ function nextScramble() {
   const eligible = allWords.filter(w => !w.pl.includes(' '));
   const words    = eligible.length > 0 ? eligible : allWords;
 
-  if (scramPool.length === 0) scramPool = shuffle([...words]);
-  scramWord = scramPool.pop();
+  if (scramPool.length === 0) scramPool = buildSrsPool(currentTopic, words);
+  scramWord = scramPool.shift(); // shift() preserves due-first ordering
   computeScramTileSize([...scramWord.pl].length);
 
   document.getElementById('scramPrompt').textContent = scramWord.en;
@@ -1374,18 +1603,27 @@ function checkScramble() {
     document.getElementById('sRight').textContent = scramRight;
     awardXP(8, document.getElementById('scramAnswer'));
     if (!calmMode) slots.forEach(s => s.classList.add('bounce'));
+    srsCorrect(currentTopic, scramWord.pl);
   } else {
     fb.textContent = '✗  ' + scramWord.pl;
     fb.style.color = calmMode ? '#b5786a' : '#e74c3c';
     scramWrong++;
     document.getElementById('sWrong').textContent = scramWrong;
     recordWrongWord(currentTopic, scramWord.pl);
+    srsWrong(currentTopic, scramWord.pl);
   }
   document.getElementById('scramNext').style.display = 'block';
 }
 
 // ── START ─────────────────────────────────────────────────────────────────────
-init();
+migrateSharedData();  // one-time: copy old shared mastery to all profiles
+buildProfileCards();  // populate picker with current XP/streak per name
+
+const _saved = localStorage.getItem('polski_active_profile');
+if (_saved && PROFILES.some(p => p.name === _saved)) {
+  pickProfile(_saved); // returning player — auto-enter, skip the picker
+}
+// If no saved profile, the picker overlay stays visible until the user taps a name.
 </script>
 </body>
 </html>
