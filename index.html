@@ -61,6 +61,33 @@
     .icon-btn.on { background: rgba(255,255,255,0.45); }
     .shield-tip { font-size: 15px; opacity: 0.9; }
 
+    /* ── XP PROGRESS BAR ───────────────────────── */
+    .xp-bar-wrap {
+      background: rgba(0,0,0,0.18);
+      border-radius: 4px; height: 5px;
+      margin: -2px 0 10px; overflow: hidden;
+    }
+    .xp-bar-fill {
+      height: 100%; background: #f39c12;
+      border-radius: 4px; transition: width 0.5s ease;
+    }
+    body.calm .xp-bar-fill { background: #c8a840; }
+
+    /* ── LEVEL-UP TOAST ─────────────────────────── */
+    .level-toast {
+      position: fixed; bottom: 80px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #c0392b; color: #fff; border-radius: 16px;
+      padding: 13px 22px; font-size: 17px;
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      z-index: 1000; pointer-events: none;
+      opacity: 0; transition: opacity 0.3s, transform 0.3s;
+      text-align: center; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.28);
+    }
+    .level-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    body.calm .level-toast { background: #8b6458; }
+
     /* ── NAV ────────────────────────────────────── */
     .nav { display: flex; gap: 6px; margin-bottom: 1rem; }
     .nav-btn {
@@ -378,6 +405,8 @@
     }
     body.calm .xp-pop { display: none; }
 
+    /* ── CONFETTI CANVAS is injected by JS; no static styles needed ── */
+
     /* ── BOUNCE ─────────────────────────────────── */
     @keyframes bounceAnim {
       0%,100% { transform: scale(1); }
@@ -454,7 +483,7 @@
   <div class="stats-bar">
     <div class="stat-item">🔥&thinsp;<span class="stat-value" id="statStreak">0</span></div>
     <div class="stat-item">⭐&thinsp;<span class="stat-value" id="statXP">0</span> XP</div>
-    <div class="stat-item">Lv.<span class="stat-value" id="statLevel">1</span></div>
+    <div class="stat-item">Lv.<span class="stat-value" id="statLevel">1</span>&thinsp;<span id="statLevelName" style="font-size:11px;opacity:0.85;font-weight:700">Uczeń</span></div>
     <div class="stat-item" id="srsDueItem" style="display:none">📚&thinsp;<span class="stat-value" id="srsDueCount">0</span> due</div>
     <div class="stats-spacer"></div>
     <span class="shield-tip" id="shieldTip" title="Streak shield active!" style="display:none">🛡️</span>
@@ -462,6 +491,9 @@
     <button class="icon-btn" onclick="resetStudyHints()" title="Reset tricky-word hints">↺</button>
     <button class="icon-btn" id="calmBtn" onclick="toggleCalm()" title="Calm mode">🌙</button>
   </div>
+
+  <!-- XP PROGRESS BAR -->
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div></div>
 
   <!-- PRACTICE BANNER -->
   <div class="practice-banner" id="practiceBanner">📖 Practice mode — explore without pressure!</div>
@@ -751,8 +783,9 @@ let shieldActive = false;
 let calmMode     = localStorage.getItem('polski_calm') === 'true'; // global — not per-profile
 let mastered     = {};
 let wrongWords   = {};
-let srsData      = {}; // Leitner records: { topic: { pl: { box, due } } }
-let currentProfile = ''; // set by pickProfile()
+let srsData           = {}; // Leitner records: { topic: { pl: { box, due } } }
+let topicBonusClaimed = {}; // { topic: true } — one-time +50 XP per topic per profile
+let currentProfile    = ''; // set by pickProfile()
 
 // ── RUNTIME STATE ─────────────────────────────────────────────────────────────
 const topics = Object.keys(vocab);
@@ -784,6 +817,15 @@ let scramRight = 0, scramWrong = 0;
 const praiseCorrect = ['Świetnie! 🌟','Brawo! 🎉','Tak jest! ✅','Doskonale! 💫','Super! ⭐','Znakomicie! 🏆'];
 const praiseAlmost  = ['Prawie! 🤔','Spróbuj jeszcze raz! 💪','Nie szkodzi! 😊'];
 let praiseIdx = 0;
+
+// Level thresholds and Polish names. Edit here to tune the XP ladder.
+const LEVELS = [
+  { name: 'Uczeń',      xpMin:    0 },
+  { name: 'Rozmówca',   xpMin:  100 },
+  { name: 'Przyjaciel', xpMin:  300 },
+  { name: 'Znawca',     xpMin:  600 },
+  { name: 'Mistrz',     xpMin: 1000 },
+];
 
 // Leitner box intervals (milliseconds). Edit here to tune review cadence.
 // Box 1 is the "requeue delay" — short so wrong words resurface later in the same session.
@@ -827,9 +869,10 @@ function loadProfile(name) {
   mastered   = {};
   wrongWords = {};
   srsData    = {};
-  try { mastered   = JSON.parse(localStorage.getItem(pk('polski_mastered'))    || '{}'); } catch(e) {}
-  try { wrongWords = JSON.parse(localStorage.getItem(pk('polski_wrong_words')) || '{}'); } catch(e) {}
-  try { srsData    = JSON.parse(localStorage.getItem(pk('polski_srs'))         || '{}'); } catch(e) {}
+  try { mastered          = JSON.parse(localStorage.getItem(pk('polski_mastered'))     || '{}'); } catch(e) {}
+  try { wrongWords        = JSON.parse(localStorage.getItem(pk('polski_wrong_words'))  || '{}'); } catch(e) {}
+  try { srsData           = JSON.parse(localStorage.getItem(pk('polski_srs'))          || '{}'); } catch(e) {}
+  try { topicBonusClaimed = JSON.parse(localStorage.getItem(pk('polski_topic_bonus'))  || '{}'); } catch(e) {}
 }
 
 // Render the profile-picker cards (called at startup and when re-opening the picker).
@@ -897,21 +940,39 @@ function init() {
 
 // ── STATS & XP ───────────────────────────────────────────────────────────────
 function updateStats() {
-  document.getElementById('statStreak').textContent = streak;
-  document.getElementById('statXP').textContent     = xp;
-  document.getElementById('statLevel').textContent  = getLevel(xp);
-  document.getElementById('shieldTip').style.display = shieldActive ? 'inline' : 'none';
+  document.getElementById('statStreak').textContent    = streak;
+  document.getElementById('statXP').textContent        = xp;
+  document.getElementById('statLevel').textContent     = getLevel(xp);
+  document.getElementById('statLevelName').textContent = getLevelName(xp);
+  document.getElementById('xpBarFill').style.width     = getLevelPct(xp) + '%';
+  document.getElementById('shieldTip').style.display   = shieldActive ? 'inline' : 'none';
 }
 
-function getLevel(v) { return Math.floor(v / 100) + 1; }
+function getLevelIdx(v) {
+  for (let i = LEVELS.length - 1; i >= 0; i--) { if (v >= LEVELS[i].xpMin) return i; }
+  return 0;
+}
+function getLevel(v)    { return getLevelIdx(v) + 1; }
+function getLevelName(v){ return LEVELS[getLevelIdx(v)].name; }
+function getLevelPct(v) {
+  const i = getLevelIdx(v);
+  if (i >= LEVELS.length - 1) return 100;
+  const lo = LEVELS[i].xpMin, hi = LEVELS[i + 1].xpMin;
+  return Math.round((v - lo) / (hi - lo) * 100);
+}
 
 function awardXP(amount, triggerEl) {
   if (practiceMode) return;
+  const prevLevel = getLevel(xp);
   xp += amount;
   roundXP += amount;
   try { localStorage.setItem(pk('polski_xp'), xp.toString()); } catch(e) {}
   updateStats();
   if (triggerEl) showXPPop(amount, triggerEl);
+  if (getLevel(xp) > prevLevel) {
+    fireConfetti();
+    showLevelUpToast(getLevel(xp), getLevelName(xp));
+  }
 }
 
 function showXPPop(amount, el) {
@@ -1047,6 +1108,54 @@ function showAudioButtons() {
   document.querySelectorAll('.audio-btn').forEach(b => {
     if (b.id !== 'quizAudioBtn') b.style.display = '';
   });
+}
+
+// ── CONFETTI & LEVEL TOAST ───────────────────────────────────────────────────
+function fireConfetti() {
+  if (calmMode) return;
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9000';
+  document.body.appendChild(canvas);
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const COLS = ['#c0392b','#e67e22','#f1c40f','#27ae60','#3498db','#9b59b6','#fff'];
+  const parts = Array.from({length: 90}, () => ({
+    x:  Math.random() * canvas.width,
+    y: -10 - Math.random() * 40,
+    vx: (Math.random() - 0.5) * 7,
+    vy:  Math.random() * 3 + 2,
+    w:   Math.random() * 9 + 4,
+    h:   Math.random() * 5 + 3,
+    col: COLS[Math.floor(Math.random() * COLS.length)],
+    ang: Math.random() * Math.PI * 2,
+    sp:  (Math.random() - 0.5) * 0.15,
+  }));
+  let t = 0;
+  (function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    parts.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.13; p.ang += p.sp;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.ang);
+      ctx.fillStyle = p.col; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (++t < 130) requestAnimationFrame(draw);
+    else canvas.remove();
+  })();
+}
+
+function showLevelUpToast(level, name) {
+  const el = document.createElement('div');
+  el.className = 'level-toast';
+  el.textContent = '🎉 Poziom ' + level + ' — ' + name + '!';
+  document.body.appendChild(el);
+  // double-rAF lets the browser paint before adding the transition class
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 400);
+  }, 2800);
 }
 
 // ── PRAISE ────────────────────────────────────────────────────────────────────
@@ -1263,7 +1372,18 @@ function toggleGotIt() {
   const w = vocab[currentTopic][cardIdx];
   const wasLearned = isMastered(currentTopic, w.pl);
   setMastered(currentTopic, w.pl, !wasLearned);
-  if (!wasLearned) awardXP(5, document.getElementById('gotItBtn'));
+  if (!wasLearned) {
+    awardXP(5, document.getElementById('gotItBtn'));
+    // One-time +50 XP bonus the first time a topic is fully mastered
+    if (!practiceMode
+        && masteredCount(currentTopic) >= vocab[currentTopic].length
+        && !topicBonusClaimed[currentTopic]) {
+      topicBonusClaimed[currentTopic] = true;
+      try { localStorage.setItem(pk('polski_topic_bonus'), JSON.stringify(topicBonusClaimed)); } catch(e) {}
+      awardXP(50, document.getElementById('gotItBtn'));
+      fireConfetti();
+    }
+  }
   updateGotItBtn();
   buildTopicBar();
   renderChallengeCard();
@@ -1350,6 +1470,7 @@ function nextQuiz() {
         awardXP(10, b);
         showPraise(true, 'praiseMsgQuiz');
         srsCorrect(currentTopic, current.pl);
+        speakPolish(current.pl);
       } else {
         b.classList.add('wrong');
         qWrong++;
@@ -1486,9 +1607,11 @@ function handleMatch(btn) {
       btn.classList.add('matched'); btn.disabled = true;
       awardXP(5, btn);
       srsCorrect(currentTopic, a.dataset.pl); // correct only — mismatches are not penalised
+      speakPolish(a.dataset.pl);
       matchedCount++;
       if (matchedCount === matchPool.length) {
         document.getElementById('matchResult').style.display = 'block';
+        fireConfetti();
       }
     } else {
       a.classList.add('wrong-shake'); btn.classList.add('wrong-shake');
@@ -1604,6 +1727,7 @@ function checkScramble() {
     awardXP(8, document.getElementById('scramAnswer'));
     if (!calmMode) slots.forEach(s => s.classList.add('bounce'));
     srsCorrect(currentTopic, scramWord.pl);
+    speakPolish(scramWord.pl);
   } else {
     fb.textContent = '✗  ' + scramWord.pl;
     fb.style.color = calmMode ? '#b5786a' : '#e74c3c';
