@@ -115,6 +115,21 @@
     .topic-progress { opacity: 0.75; }
     body.calm .topic-btn.active { background: #b5651d; border-color: #b5651d; }
 
+    /* ── TOPIC LEVEL LABEL ──────────────────────── */
+    .topic-level-label {
+      width: 100%; font-size: 10px; font-weight: 700; color: #bbb;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      padding: 2px 2px 0; border-top: 1px solid #eee; margin-top: 4px;
+    }
+    .topic-level-label.first { border-top: none; margin-top: 0; padding-top: 0; }
+
+    /* ── WORD IMAGE (EMOJI) ─────────────────────── */
+    .word-img {
+      font-size: 60px; line-height: 1; margin-bottom: 6px;
+      display: block; text-align: center; user-select: none;
+    }
+    .quiz-img { font-size: 46px; line-height: 1; text-align: center; margin-bottom: 2px; }
+
     /* ── PRACTICE BANNER ────────────────────────── */
     .practice-banner {
       text-align: center; font-size: 13px; font-weight: 700;
@@ -514,6 +529,7 @@
     <div class="card-area">
       <div class="flashcard" onclick="flipCard()" id="flashcard">
         <div class="mastered-star" id="masteredStar">⭐</div>
+        <div class="word-img" id="fIMG"></div>
         <div class="word-pl" id="fPL">—</div>
         <button class="audio-btn" id="flashAudioBtn" title="Hear pronunciation">🔊</button>
         <div class="word-hint" id="fHint"></div>
@@ -546,6 +562,7 @@
       <span class="score-pill score-right">✓ <span id="qRight">0</span></span>
       <span class="score-pill score-wrong">✗ <span id="qWrong">0</span></span>
     </div>
+    <div class="quiz-img" id="quizIMG"></div>
     <div class="quiz-q-row">
       <div class="quiz-q" id="quizQ">—</div>
       <button class="audio-btn" id="quizAudioBtn" title="Hear pronunciation">🔊</button>
@@ -620,147 +637,210 @@
 <script>
 // ── VOCAB ─────────────────────────────────────────────────────────────────────
 const vocab = {
+  // ── LEVEL 1 ──────────────────────────────────────────────────────────────
   greetings: [
-    {pl:"Cześć",en:"Hi / Hello",hint:"cheshch"},
-    {pl:"Dzień dobry",en:"Good morning",hint:"dyen DOH-bry"},
-    {pl:"Dobranoc",en:"Good night",hint:"doh-BRAH-nots"},
-    {pl:"Do widzenia",en:"Goodbye",hint:"do vee-DZEN-ya"},
-    {pl:"Dziękuję",en:"Thank you",hint:"dyen-KOO-yeh"},
-    {pl:"Proszę",en:"Please / Here you go",hint:"PROH-sheh"},
-    {pl:"Przepraszam",en:"Sorry / Excuse me",hint:"psheh-PRAH-shahm"},
-    {pl:"Tak",en:"Yes",hint:"tahk"},
-    {pl:"Nie",en:"No",hint:"nyeh"},
-    {pl:"Jak się nazywasz?",en:"What's your name?",hint:"yak sheh na-ZY-vash"},
-    {pl:"Mam na imię…",en:"My name is…",hint:"mam na EE-myeh"},
+    {pl:"Cześć",           en:"Hi / Hello",          hint:"cheshch",               img:"👋"},
+    {pl:"Dzień dobry",     en:"Good morning",         hint:"dyen DOH-bry",          img:"🌅"},
+    {pl:"Dobranoc",        en:"Good night",           hint:"doh-BRAH-nots",         img:"🌙"},
+    {pl:"Do widzenia",     en:"Goodbye",              hint:"do vee-DZEN-ya",        img:"🚶"},
+    {pl:"Dziękuję",        en:"Thank you",            hint:"dyen-KOO-yeh",          img:"🙏"},
+    {pl:"Proszę",          en:"Please / Here you go", hint:"PROH-sheh",             img:"🤲"},
+    {pl:"Przepraszam",     en:"Sorry / Excuse me",    hint:"psheh-PRAH-shahm",      img:"😅"},
+    {pl:"Tak",             en:"Yes",                  hint:"tahk",                  img:"✅"},
+    {pl:"Nie",             en:"No",                   hint:"nyeh",                  img:"❌"},
+    {pl:"Jak się nazywasz?",en:"What's your name?",   hint:"yak sheh na-ZY-vash",   img:"🤔"},
+    {pl:"Mam na imię…",   en:"My name is…",          hint:"mam na EE-myeh",        img:"😊"},
   ],
   numbers: [
-    {pl:"Jeden",en:"One",hint:"YEH-den"},
-    {pl:"Dwa",en:"Two",hint:"dvah"},
-    {pl:"Trzy",en:"Three",hint:"tshih"},
-    {pl:"Cztery",en:"Four",hint:"CHTE-ry"},
-    {pl:"Pięć",en:"Five",hint:"pyench"},
-    {pl:"Sześć",en:"Six",hint:"sheshch"},
-    {pl:"Siedem",en:"Seven",hint:"SHEH-dem"},
-    {pl:"Osiem",en:"Eight",hint:"OH-shyem"},
-    {pl:"Dziewięć",en:"Nine",hint:"djeh-VYENCH"},
-    {pl:"Dziesięć",en:"Ten",hint:"djeh-SHENCH"},
-    {pl:"Jedenaście",en:"Eleven",hint:"yeh-deh-NASH-cheh"},
-    {pl:"Dwanaście",en:"Twelve",hint:"dva-NASH-cheh"},
-    {pl:"Trzynaście",en:"Thirteen",hint:"tshi-NASH-cheh"},
-    {pl:"Czternaście",en:"Fourteen",hint:"chter-NASH-cheh"},
-    {pl:"Piętnaście",en:"Fifteen",hint:"pyent-NASH-cheh"},
-    {pl:"Szesnaście",en:"Sixteen",hint:"shes-NASH-cheh"},
-    {pl:"Siedemnaście",en:"Seventeen",hint:"sheh-dem-NASH-cheh"},
-    {pl:"Osiemnaście",en:"Eighteen",hint:"oh-shem-NASH-cheh"},
-    {pl:"Dziewiętnaście",en:"Nineteen",hint:"djeh-vyent-NASH-cheh"},
-    {pl:"Dwadzieścia",en:"Twenty",hint:"dva-DJESH-cha"},
+    {pl:"Jeden",           en:"One",       hint:"YEH-den",              img:"1️⃣"},
+    {pl:"Dwa",             en:"Two",       hint:"dvah",                 img:"2️⃣"},
+    {pl:"Trzy",            en:"Three",     hint:"tshih",                img:"3️⃣"},
+    {pl:"Cztery",          en:"Four",      hint:"CHTE-ry",              img:"4️⃣"},
+    {pl:"Pięć",            en:"Five",      hint:"pyench",               img:"5️⃣"},
+    {pl:"Sześć",           en:"Six",       hint:"sheshch",              img:"6️⃣"},
+    {pl:"Siedem",          en:"Seven",     hint:"SHEH-dem",             img:"7️⃣"},
+    {pl:"Osiem",           en:"Eight",     hint:"OH-shyem",             img:"8️⃣"},
+    {pl:"Dziewięć",        en:"Nine",      hint:"djeh-VYENCH",          img:"9️⃣"},
+    {pl:"Dziesięć",        en:"Ten",       hint:"djeh-SHENCH",          img:"🔟"},
+    {pl:"Jedenaście",      en:"Eleven",    hint:"yeh-deh-NASH-cheh",    img:"🔢"},
+    {pl:"Dwanaście",       en:"Twelve",    hint:"dva-NASH-cheh",        img:"🔢"},
+    {pl:"Trzynaście",      en:"Thirteen",  hint:"tshi-NASH-cheh",       img:"🔢"},
+    {pl:"Czternaście",     en:"Fourteen",  hint:"chter-NASH-cheh",      img:"🔢"},
+    {pl:"Piętnaście",      en:"Fifteen",   hint:"pyent-NASH-cheh",      img:"🔢"},
+    {pl:"Szesnaście",      en:"Sixteen",   hint:"shes-NASH-cheh",       img:"🔢"},
+    {pl:"Siedemnaście",    en:"Seventeen", hint:"sheh-dem-NASH-cheh",   img:"🔢"},
+    {pl:"Osiemnaście",     en:"Eighteen",  hint:"oh-shem-NASH-cheh",    img:"🔢"},
+    {pl:"Dziewiętnaście",  en:"Nineteen",  hint:"djeh-vyent-NASH-cheh", img:"🔢"},
+    {pl:"Dwadzieścia",     en:"Twenty",    hint:"dva-DJESH-cha",        img:"🔢"},
   ],
   colours: [
-    {pl:"Czerwony",en:"Red",hint:"cher-VOH-ny"},
-    {pl:"Niebieski",en:"Blue",hint:"nyeh-BYEH-skee"},
-    {pl:"Zielony",en:"Green",hint:"zheh-LOH-ny"},
-    {pl:"Żółty",en:"Yellow",hint:"ZHOOW-ty"},
-    {pl:"Czarny",en:"Black",hint:"CHAR-ny"},
-    {pl:"Biały",en:"White",hint:"BYAH-wy"},
-    {pl:"Różowy",en:"Pink",hint:"ROO-zhoh-vy"},
-    {pl:"Pomarańczowy",en:"Orange",hint:"po-ma-RAHN-choh-vy"},
-    {pl:"Fioletowy",en:"Purple",hint:"fyoh-leh-TOH-vy"},
-    {pl:"Brązowy",en:"Brown",hint:"bron-ZOH-vy"},
+    {pl:"Czerwony",        en:"Red",     hint:"cher-VOH-ny",        img:"🔴"},
+    {pl:"Niebieski",       en:"Blue",    hint:"nyeh-BYEH-skee",     img:"🔵"},
+    {pl:"Zielony",         en:"Green",   hint:"zheh-LOH-ny",        img:"🟢"},
+    {pl:"Żółty",           en:"Yellow",  hint:"ZHOOW-ty",           img:"🟡"},
+    {pl:"Czarny",          en:"Black",   hint:"CHAR-ny",            img:"⚫"},
+    {pl:"Biały",           en:"White",   hint:"BYAH-wy",            img:"⚪"},
+    {pl:"Różowy",          en:"Pink",    hint:"ROO-zhoh-vy",        img:"🩷"},
+    {pl:"Pomarańczowy",    en:"Orange",  hint:"po-ma-RAHN-choh-vy", img:"🟠"},
+    {pl:"Fioletowy",       en:"Purple",  hint:"fyoh-leh-TOH-vy",    img:"🟣"},
+    {pl:"Brązowy",         en:"Brown",   hint:"bron-ZOH-vy",        img:"🟤"},
   ],
   family: [
-    {pl:"Mama",en:"Mum",hint:"MAH-ma"},
-    {pl:"Tata",en:"Dad",hint:"TAH-ta"},
-    {pl:"Babcia",en:"Grandma",hint:"BAB-chya"},
-    {pl:"Dziadek",en:"Grandad",hint:"JA-deck"},
-    {pl:"Brat",en:"Brother",hint:"braht"},
-    {pl:"Siostra",en:"Sister",hint:"SHOS-tra"},
-    {pl:"Wujek",en:"Uncle",hint:"VOO-yek"},
-    {pl:"Ciocia",en:"Aunt",hint:"CHOH-chya"},
-    {pl:"Kuzyn",en:"Cousin (boy)",hint:"KOO-zyn"},
-    {pl:"Kuzynka",en:"Cousin (girl)",hint:"koo-ZYN-ka"},
+    {pl:"Mama",            en:"Mum",            hint:"MAH-ma",     img:"👩"},
+    {pl:"Tata",            en:"Dad",            hint:"TAH-ta",     img:"👨"},
+    {pl:"Babcia",          en:"Grandma",        hint:"BAB-chya",   img:"👵"},
+    {pl:"Dziadek",         en:"Grandad",        hint:"JA-deck",    img:"👴"},
+    {pl:"Brat",            en:"Brother",        hint:"braht",      img:"👦"},
+    {pl:"Siostra",         en:"Sister",         hint:"SHOS-tra",   img:"👧"},
+    {pl:"Wujek",           en:"Uncle",          hint:"VOO-yek",    img:"🧔"},
+    {pl:"Ciocia",          en:"Aunt",           hint:"CHOH-chya",  img:"👩‍🦱"},
+    {pl:"Kuzyn",           en:"Cousin (boy)",   hint:"KOO-zyn",    img:"🧒"},
+    {pl:"Kuzynka",         en:"Cousin (girl)",  hint:"koo-ZYN-ka", img:"👧"},
   ],
   food: [
-    {pl:"Chleb",en:"Bread",hint:"hlep"},
-    {pl:"Mleko",en:"Milk",hint:"MLEH-ko"},
-    {pl:"Woda",en:"Water",hint:"VOH-da"},
-    {pl:"Jabłko",en:"Apple",hint:"YAB-ko"},
-    {pl:"Banan",en:"Banana",hint:"BAH-nan"},
-    {pl:"Zupa",en:"Soup",hint:"ZOO-pa"},
-    {pl:"Ciasto",en:"Cake",hint:"CHYAS-to"},
-    {pl:"Lody",en:"Ice cream",hint:"LOH-dy"},
+    {pl:"Chleb",           en:"Bread",     hint:"hlep",       img:"🍞"},
+    {pl:"Mleko",           en:"Milk",      hint:"MLEH-ko",    img:"🥛"},
+    {pl:"Woda",            en:"Water",     hint:"VOH-da",     img:"💧"},
+    {pl:"Jabłko",          en:"Apple",     hint:"YAB-ko",     img:"🍎"},
+    {pl:"Banan",           en:"Banana",    hint:"BAH-nan",    img:"🍌"},
+    {pl:"Zupa",            en:"Soup",      hint:"ZOO-pa",     img:"🍲"},
+    {pl:"Ciasto",          en:"Cake",      hint:"CHYAS-to",   img:"🎂"},
+    {pl:"Lody",            en:"Ice cream", hint:"LOH-dy",     img:"🍦"},
   ],
   animals: [
-    {pl:"Kot",en:"Cat",hint:"kot"},
-    {pl:"Pies",en:"Dog",hint:"pyess"},
-    {pl:"Koń",en:"Horse",hint:"kon'"},
-    {pl:"Ptak",en:"Bird",hint:"ptak"},
-    {pl:"Ryba",en:"Fish",hint:"RYH-ba"},
-    {pl:"Królik",en:"Rabbit",hint:"KROO-leek"},
-    {pl:"Mysz",en:"Mouse",hint:"mysh"},
-    {pl:"Żaba",en:"Frog",hint:"ZHA-ba"},
-    {pl:"Świnia",en:"Pig",hint:"SHVEE-nya"},
-    {pl:"Krowa",en:"Cow",hint:"KROH-va"},
+    {pl:"Kot",             en:"Cat",    hint:"kot",        img:"🐱"},
+    {pl:"Pies",            en:"Dog",    hint:"pyess",      img:"🐶"},
+    {pl:"Koń",             en:"Horse",  hint:"kon'",       img:"🐴"},
+    {pl:"Ptak",            en:"Bird",   hint:"ptak",       img:"🐦"},
+    {pl:"Ryba",            en:"Fish",   hint:"RYH-ba",     img:"🐟"},
+    {pl:"Królik",          en:"Rabbit", hint:"KROO-leek",  img:"🐰"},
+    {pl:"Mysz",            en:"Mouse",  hint:"mysh",       img:"🐭"},
+    {pl:"Żaba",            en:"Frog",   hint:"ZHA-ba",     img:"🐸"},
+    {pl:"Świnia",          en:"Pig",    hint:"SHVEE-nya",  img:"🐷"},
+    {pl:"Krowa",           en:"Cow",    hint:"KROH-va",    img:"🐮"},
   ],
   school: [
-    {pl:"Książka",en:"Book",hint:"KSYONZH-ka"},
-    {pl:"Ołówek",en:"Pencil",hint:"o-WOO-vek"},
-    {pl:"Długopis",en:"Pen",hint:"dwoo-GOH-pees"},
-    {pl:"Biurko",en:"Desk",hint:"BYOOR-ko"},
-    {pl:"Nauczyciel",en:"Teacher",hint:"na-oo-CHY-chyel"},
-    {pl:"Tornister",en:"School bag",hint:"tor-NEES-ter"},
-    {pl:"Linijka",en:"Ruler",hint:"lee-NEE-yka"},
-    {pl:"Klasa",en:"Class / Classroom",hint:"KLAH-sa"},
+    {pl:"Książka",         en:"Book",          hint:"KSYONZH-ka",     img:"📚"},
+    {pl:"Ołówek",          en:"Pencil",         hint:"o-WOO-vek",      img:"✏️"},
+    {pl:"Długopis",        en:"Pen",            hint:"dwoo-GOH-pees",  img:"🖊️"},
+    {pl:"Biurko",          en:"Desk",           hint:"BYOOR-ko",       img:"🪑"},
+    {pl:"Nauczyciel",      en:"Teacher",        hint:"na-oo-CHY-chyel",img:"👨‍🏫"},
+    {pl:"Tornister",       en:"School bag",     hint:"tor-NEES-ter",   img:"🎒"},
+    {pl:"Linijka",         en:"Ruler",          hint:"lee-NEE-yka",    img:"📏"},
+    {pl:"Klasa",           en:"Class / Classroom",hint:"KLAH-sa",      img:"🏫"},
   ],
   clothes: [
-    {pl:"Koszula",en:"Shirt",hint:"ko-SHOO-la"},
-    {pl:"Spodnie",en:"Trousers",hint:"SPOD-nyeh"},
-    {pl:"Sukienka",en:"Dress",hint:"soo-KYEN-ka"},
-    {pl:"Czapka",en:"Hat",hint:"CHAP-ka"},
-    {pl:"Buty",en:"Shoes",hint:"BOO-ty"},
-    {pl:"Skarpetki",en:"Socks",hint:"skar-PET-kee"},
-    {pl:"Kurtka",en:"Jacket",hint:"KOORT-ka"},
-    {pl:"Rękawiczki",en:"Gloves",hint:"ren-ka-VEECH-kee"},
+    {pl:"Koszula",         en:"Shirt",    hint:"ko-SHOO-la",       img:"👔"},
+    {pl:"Spodnie",         en:"Trousers", hint:"SPOD-nyeh",        img:"👖"},
+    {pl:"Sukienka",        en:"Dress",    hint:"soo-KYEN-ka",      img:"👗"},
+    {pl:"Czapka",          en:"Hat",      hint:"CHAP-ka",          img:"🧢"},
+    {pl:"Buty",            en:"Shoes",    hint:"BOO-ty",           img:"👟"},
+    {pl:"Skarpetki",       en:"Socks",    hint:"skar-PET-kee",     img:"🧦"},
+    {pl:"Kurtka",          en:"Jacket",   hint:"KOORT-ka",         img:"🧥"},
+    {pl:"Rękawiczki",      en:"Gloves",   hint:"ren-ka-VEECH-kee", img:"🧤"},
   ],
   weather: [
-    {pl:"Słońce",en:"Sun",hint:"SWON-tseh"},
-    {pl:"Deszcz",en:"Rain",hint:"deshch"},
-    {pl:"Śnieg",en:"Snow",hint:"shnyeg"},
-    {pl:"Wiatr",en:"Wind",hint:"VYATR"},
-    {pl:"Ciepło",en:"Warm",hint:"CHYEP-wo"},
-    {pl:"Zimno",en:"Cold",hint:"ZEEM-no"},
-    {pl:"Chmura",en:"Cloud",hint:"HMOO-ra"},
-    {pl:"Poniedziałek",en:"Monday",hint:"po-nyeh-DJA-wek"},
-    {pl:"Wtorek",en:"Tuesday",hint:"VTOH-rek"},
-    {pl:"Środa",en:"Wednesday",hint:"SHROH-da"},
-    {pl:"Czwartek",en:"Thursday",hint:"CHVAR-tek"},
-    {pl:"Piątek",en:"Friday",hint:"PYON-tek"},
-    {pl:"Sobota",en:"Saturday",hint:"so-BOH-ta"},
-    {pl:"Niedziela",en:"Sunday",hint:"nyeh-DJEH-la"},
+    {pl:"Słońce",          en:"Sun",       hint:"SWON-tseh",       img:"☀️"},
+    {pl:"Deszcz",          en:"Rain",      hint:"deshch",          img:"🌧️"},
+    {pl:"Śnieg",           en:"Snow",      hint:"shnyeg",          img:"❄️"},
+    {pl:"Wiatr",           en:"Wind",      hint:"VYATR",           img:"💨"},
+    {pl:"Ciepło",          en:"Warm",      hint:"CHYEP-wo",        img:"🌡️"},
+    {pl:"Zimno",           en:"Cold",      hint:"ZEEM-no",         img:"🥶"},
+    {pl:"Chmura",          en:"Cloud",     hint:"HMOO-ra",         img:"☁️"},
+    {pl:"Poniedziałek",    en:"Monday",    hint:"po-nyeh-DJA-wek", img:"📅"},
+    {pl:"Wtorek",          en:"Tuesday",   hint:"VTOH-rek",        img:"📝"},
+    {pl:"Środa",           en:"Wednesday", hint:"SHROH-da",        img:"🌿"},
+    {pl:"Czwartek",        en:"Thursday",  hint:"CHVAR-tek",       img:"⚡"},
+    {pl:"Piątek",          en:"Friday",    hint:"PYON-tek",        img:"🎉"},
+    {pl:"Sobota",          en:"Saturday",  hint:"so-BOH-ta",       img:"⚽"},
+    {pl:"Niedziela",       en:"Sunday",    hint:"nyeh-DJEH-la",    img:"🌞"},
+  ],
+  // ── LEVEL 2 ──────────────────────────────────────────────────────────────
+  body: [
+    {pl:"Głowa",           en:"Head",    hint:"GWO-va",     img:"🗣️"},
+    {pl:"Ręka",            en:"Hand",    hint:"REN-ka",     img:"🖐️"},
+    {pl:"Noga",            en:"Leg",     hint:"NOH-ga",     img:"🦵"},
+    {pl:"Oko",             en:"Eye",     hint:"OH-ko",      img:"👁️"},
+    {pl:"Ucho",            en:"Ear",     hint:"OO-ho",      img:"👂"},
+    {pl:"Nos",             en:"Nose",    hint:"nos",        img:"👃"},
+    {pl:"Usta",            en:"Mouth",   hint:"OO-sta",     img:"👄"},
+    {pl:"Zęby",            en:"Teeth",   hint:"ZEN-by",     img:"🦷"},
+    {pl:"Plecy",           en:"Back",    hint:"PLEH-tsy",   img:"🔙"},
+    {pl:"Palec",           en:"Finger",  hint:"PAH-lets",   img:"☝️"},
+  ],
+  adjectives: [
+    {pl:"Duży",            en:"Big",     hint:"DOO-zhy",     img:"🐘"},
+    {pl:"Mały",            en:"Small",   hint:"MAH-wy",      img:"🐭"},
+    {pl:"Gorący",          en:"Hot",     hint:"go-RON-tsy",  img:"🔥"},
+    {pl:"Zimny",           en:"Cold",    hint:"ZEEM-ny",     img:"🧊"},
+    {pl:"Szybki",          en:"Fast",    hint:"SHYB-kee",    img:"🚀"},
+    {pl:"Wolny",           en:"Slow",    hint:"VOL-ny",      img:"🐌"},
+    {pl:"Wesoły",          en:"Happy",   hint:"veh-SOH-wy",  img:"😄"},
+    {pl:"Smutny",          en:"Sad",     hint:"SMOOT-ny",    img:"😢"},
+    {pl:"Ładny",           en:"Pretty",  hint:"WAHD-ny",     img:"🌸"},
+    {pl:"Brzydki",         en:"Ugly",    hint:"BZHYD-kee",   img:"🙈"},
+  ],
+  places: [
+    {pl:"Dom",             en:"Home",          hint:"dom",            img:"🏠"},
+    {pl:"Szkoła",          en:"School",         hint:"SHKOH-wa",       img:"🏫"},
+    {pl:"Park",            en:"Park",           hint:"park",           img:"🌳"},
+    {pl:"Sklep",           en:"Shop",           hint:"sklep",          img:"🛒"},
+    {pl:"Biblioteka",      en:"Library",        hint:"beeb-lyo-TEH-ka",img:"📖"},
+    {pl:"Ulica",           en:"Street",         hint:"oo-LEE-tsa",     img:"🛣️"},
+    {pl:"Miasto",          en:"City",           hint:"MYAS-to",        img:"🏙️"},
+    {pl:"Plac zabaw",      en:"Playground",     hint:"plats ZA-bav",   img:"🛝"},
+    {pl:"Basen",           en:"Swimming pool",  hint:"BAH-sen",        img:"🏊"},
+    {pl:"Kościół",         en:"Church",         hint:"KOSH-chyow",     img:"⛪"},
+  ],
+  phrases: [
+    {pl:"Chcę…",           en:"I want…",            hint:"htseh",              img:"🙋"},
+    {pl:"Mam…",            en:"I have…",             hint:"mahm",               img:"🤲"},
+    {pl:"Lubię…",          en:"I like…",             hint:"LOO-byeh",           img:"❤️"},
+    {pl:"Nie lubię…",      en:"I don't like…",       hint:"nyeh LOO-byeh",      img:"💔"},
+    {pl:"Gdzie jest…?",    en:"Where is…?",          hint:"gdjeh yest",         img:"🗺️"},
+    {pl:"Co to jest?",     en:"What is this?",       hint:"tso to yest",        img:"🤔"},
+    {pl:"Nie rozumiem",    en:"I don't understand",  hint:"nyeh ro-ZOO-myem",   img:"😕"},
+    {pl:"Mogę?",           en:"May I?",              hint:"MOH-geh",            img:"🙏"},
+    {pl:"Pomóż mi",        en:"Help me",             hint:"POH-moozh mee",      img:"🆘"},
+    {pl:"Ile to kosztuje?",en:"How much is it?",     hint:"EE-leh to kosh-TOO-yeh",img:"💰"},
   ],
 };
 
 const topicLabels = {
-  greetings: "👋 Greetings",
-  numbers:   "🔢 Numbers",
-  colours:   "🎨 Colours",
-  family:    "👨‍👩‍👧 Family",
-  food:      "🍎 Food",
-  animals:   "🐾 Animals",
-  school:    "🏫 School",
-  clothes:   "👕 Clothes",
-  weather:   "🌦 Weather & Days",
+  greetings:  "👋 Greetings",
+  numbers:    "🔢 Numbers",
+  colours:    "🎨 Colours",
+  family:     "👨‍👩‍👧 Family",
+  food:       "🍎 Food",
+  animals:    "🐾 Animals",
+  school:     "🏫 School",
+  clothes:    "👕 Clothes",
+  weather:    "🌦 Weather & Days",
+  body:       "🖐️ Body",
+  adjectives: "✨ Adjectives",
+  places:     "🏙️ Places",
+  phrases:    "💬 Phrases",
+};
+
+const TOPIC_LEVELS = {
+  1: ['greetings','numbers','colours','family','food','animals','school','clothes','weather'],
+  2: ['body','adjectives','places','phrases'],
 };
 
 const homeChallenges = {
-  greetings: "Greet Tata in three different ways in Polish today. Bonus: teach Mum one new greeting!",
-  numbers:   "Count 20 things in Polish with Tata. Then teach Mum to count to 5!",
-  colours:   "Point to 5 things at home and tell Tata their colour in Polish. Can you teach Mum two colours?",
-  family:    "Show Tata a family photo and name everyone in Polish (mama, tata, babcia…). Take turns!",
-  food:      "Name everything on your plate in Polish at dinner. Tata answers in Polish; Mum guesses in English!",
-  animals:   "Pick three animals and act them out for Tata — he says the Polish name. Then teach Mum one Polish animal name.",
-  school:    "Pack your school bag and name every item in Polish. Race Tata!",
-  clothes:   "Get dressed in the morning and name each item in Polish to Tata. Bonus: teach Mum one item.",
-  weather:   "Look out of the window with Tata and describe today's weather in Polish. Teach Mum to say one weather word.",
+  greetings:  "Greet Tata in three different ways in Polish today. Bonus: teach Mum one new greeting!",
+  numbers:    "Count 20 things in Polish with Tata. Then teach Mum to count to 5!",
+  colours:    "Point to 5 things at home and tell Tata their colour in Polish. Can you teach Mum two colours?",
+  family:     "Show Tata a family photo and name everyone in Polish (mama, tata, babcia…). Take turns!",
+  food:       "Name everything on your plate in Polish at dinner. Tata answers in Polish; Mum guesses in English!",
+  animals:    "Pick three animals and act them out for Tata — he says the Polish name. Then teach Mum one Polish animal name.",
+  school:     "Pack your school bag and name every item in Polish. Race Tata!",
+  clothes:    "Get dressed in the morning and name each item in Polish to Tata. Bonus: teach Mum one item.",
+  weather:    "Look out of the window with Tata and describe today's weather in Polish. Teach Mum to say one weather word.",
+  body:       "Touch each part of your body and say its name in Polish. Then quiz Tata — point to a body part and make him say the Polish word!",
+  adjectives: "Walk around the house with Tata and describe things — duży, mały, gorący, zimny. Take turns finding something that matches each word!",
+  places:     "On your next trip out, name every place you pass in Polish. See how many you can spot before you get home!",
+  phrases:    "Use three Polish phrases with Tata today without switching to English — Chcę, Lubię, and Pomóż mi. Can you make a mini conversation?",
 };
 
 // ── PROFILES ──────────────────────────────────────────────────────────────────
@@ -1295,15 +1375,22 @@ function updateDueCount() {
 function buildTopicBar() {
   const bar = document.getElementById('topicBar');
   bar.innerHTML = '';
-  topics.forEach(t => {
-    const total = vocab[t].length;
-    const done  = masteredCount(t);
-    const b = document.createElement('button');
-    b.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
-    b.innerHTML = topicLabels[t]
-      + (done > 0 ? ` <span class="topic-progress">${done}/${total}</span>` : '');
-    b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
-    bar.appendChild(b);
+  Object.entries(TOPIC_LEVELS).forEach(([level, levelTopics], levelIndex) => {
+    const label = document.createElement('div');
+    label.className = 'topic-level-label' + (levelIndex === 0 ? ' first' : '');
+    label.textContent = 'Level ' + level;
+    bar.appendChild(label);
+    levelTopics.forEach(t => {
+      if (!vocab[t]) return;
+      const total = vocab[t].length;
+      const done  = masteredCount(t);
+      const b = document.createElement('button');
+      b.className = 'topic-btn' + (t === currentTopic ? ' active' : '');
+      b.innerHTML = topicLabels[t]
+        + (done > 0 ? ` <span class="topic-progress">${done}/${total}</span>` : '');
+      b.onclick = () => { currentTopic = t; buildTopicBar(); resetAll(); };
+      bar.appendChild(b);
+    });
   });
   updateDueCount();
 }
@@ -1345,6 +1432,7 @@ function setMode(m) {
 function renderFlash() {
   const words = vocab[currentTopic];
   const w = words[cardIdx];
+  document.getElementById('fIMG').textContent = w.img || '';
   document.getElementById('fPL').textContent = w.pl;
   document.getElementById('fHint').textContent = '(' + w.hint + ')';
   document.getElementById('fEN').textContent = '';
@@ -1437,6 +1525,7 @@ function nextQuiz() {
 
   const PLtoEN_BIAS = { numbers: 0.75, weather: 0.75, colours: 0.65 };
   currentDirPLtoEN = Math.random() < (PLtoEN_BIAS[currentTopic] || 0.6);
+  document.getElementById('quizIMG').textContent = current.img || '';
   document.getElementById('quizQ').textContent =
     currentDirPLtoEN ? current.pl : current.en;
   document.getElementById('quizSub').textContent =
