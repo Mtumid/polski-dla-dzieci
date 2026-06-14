@@ -420,6 +420,61 @@
     }
     body.calm .xp-pop { display: none; }
 
+    /* ── BUILD (Ułóż zdanie — tap-to-order sentence) ────────────────── */
+    .build-prompt {
+      font-size: 22px; font-weight: 700; color: #27ae60;
+      text-align: center; margin-bottom: 4px;
+    }
+    body.calm .build-prompt { color: #6fa898; }
+    .build-sub {
+      font-size: 14px; color: #bbb; text-align: center;
+      margin-bottom: 1.25rem; font-style: italic;
+    }
+    .build-answer {
+      display: flex; flex-wrap: wrap; gap: 7px;
+      justify-content: center; min-height: 56px; align-items: center;
+      background: #f8f8f8; border-radius: 12px;
+      padding: 10px 12px; border: 2px dashed #ddd;
+      margin-bottom: 1.25rem; transition: border-color 0.2s, background 0.2s;
+    }
+    .build-answer.correct  { border-color: #27ae60; background: #eafaf1; }
+    .build-answer.wrong-col { border-color: #e74c3c; background: #fdedec; }
+    body.calm .build-answer.correct  { border-color: #6fa898; background: #e5f0ee; }
+    body.calm .build-answer.wrong-col { border-color: #b5786a; background: #f2e8e6; }
+    .build-word-slot {
+      padding: 8px 14px; border-radius: 8px;
+      border: 2px solid #c0392b; background: #fff5f5;
+      font-family: 'Fredoka', cursive; font-weight: 700;
+      font-size: 20px; color: #c0392b; cursor: pointer;
+      transition: background 0.15s; user-select: none; touch-action: manipulation;
+    }
+    .build-word-slot:hover { background: #fde8e8; }
+    body.calm .build-word-slot { border-color: #8b6458; background: #f5eeec; color: #8b6458; }
+    .build-bank {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-bottom: 1rem; min-height: 52px;
+    }
+    .build-tile {
+      padding: 10px 16px; border-radius: 10px;
+      border: 2px solid #3498db; background: #ebf5fb;
+      font-family: 'Fredoka', cursive; font-weight: 700;
+      font-size: 20px; color: #2980b9; cursor: pointer;
+      transition: all 0.15s; user-select: none; touch-action: manipulation;
+    }
+    .build-tile:hover { background: #3498db; color: #fff; transform: translateY(-2px); }
+    .build-tile.used { opacity: 0.18; cursor: default; pointer-events: none; }
+    body.calm .build-tile { border-color: #7a9abf; background: #e8eef5; color: #5a7a9f; }
+    body.calm .build-tile:hover { background: #7a9abf; color: #fff; transform: none; }
+    .build-feedback {
+      text-align: center; font-family: 'Fredoka', cursive; font-weight: 700;
+      font-size: 24px; min-height: 36px; margin-bottom: 0.5rem;
+    }
+    .build-score { display: flex; gap: 12px; justify-content: center; margin-bottom: 1rem; }
+    .build-no-sentences {
+      text-align: center; padding: 2rem 1rem;
+      font-size: 15px; color: #aaa; font-weight: 600; line-height: 1.6;
+    }
+
     /* ── CONFETTI CANVAS is injected by JS; no static styles needed ── */
 
     /* ── BOUNCE ─────────────────────────────────── */
@@ -519,6 +574,7 @@
     <button class="nav-btn" onclick="setMode('quiz')">🧠 Quiz</button>
     <button class="nav-btn" onclick="setMode('match')">🔗 Match</button>
     <button class="nav-btn" onclick="setMode('scram')">🧩 Scramble</button>
+    <button class="nav-btn" onclick="setMode('build')">🏗️ Build</button>
   </div>
 
   <!-- TOPIC BAR -->
@@ -599,6 +655,20 @@
     <div class="scram-bank" id="scramBank"></div>
     <div class="scram-feedback" id="scramFeedback"></div>
     <button class="next-btn" id="scramNext" onclick="nextScramble()">Next word →</button>
+  </div>
+
+  <!-- BUILD MODE (Ułóż zdanie — tap words into correct order) -->
+  <div id="buildMode" class="panel">
+    <div class="build-score" id="buildScoreRow">
+      <span class="score-pill score-right">✓ <span id="bRight">0</span></span>
+      <span class="score-pill score-wrong">✗ <span id="bWrong">0</span></span>
+    </div>
+    <div class="build-prompt" id="buildPrompt">—</div>
+    <div class="build-sub" id="buildSub">Put the words in the right order</div>
+    <div class="build-answer" id="buildAnswer"></div>
+    <div class="build-bank" id="buildBank"></div>
+    <div class="build-feedback" id="buildFeedback"></div>
+    <button class="next-btn" id="buildNext" onclick="buildHandleNext()">Next sentence →</button>
   </div>
 
   <!-- END SCREEN -->
@@ -804,6 +874,44 @@ const vocab = {
     {pl:"Pomóż mi",        en:"Help me",             hint:"POH-moozh mee",      img:"🆘"},
     {pl:"Ile to kosztuje?",en:"How much is it?",     hint:"EE-leh to kosh-TOO-yeh",img:"💰"},
   ],
+  // ── LEVEL 3 ──────────────────────────────────────────────────────────────
+  // Unit 10 + 15: Present-tense verbs in daily-routine sentences
+  moj_dzien: [
+    {pl:"Jem śniadanie.",        en:"I eat breakfast.",         hint:"yem shnya-DA-nyeh",            img:"🥣"},
+    {pl:"Idę do szkoły.",        en:"I go to school.",          hint:"EE-deh do SHKOH-wy",           img:"🎒"},
+    {pl:"Czytam książkę.",       en:"I read a book.",           hint:"CHY-tam KSYONZH-keh",          img:"📖"},
+    {pl:"Piję wodę.",            en:"I drink water.",           hint:"PEE-yeh VOH-deh",              img:"💧"},
+    {pl:"Myję zęby.",            en:"I brush my teeth.",        hint:"MY-yeh ZEN-by",                img:"🪥"},
+    {pl:"Gram w piłkę.",         en:"I play football.",         hint:"gram f PEEW-keh",              img:"⚽"},
+    {pl:"Wstaję rano.",          en:"I get up in the morning.", hint:"VSTAH-yeh RAH-no",             img:"🌅"},
+    {pl:"Oglądam telewizję.",    en:"I watch television.",      hint:"og-LON-dam teh-leh-VEEZ-yeh",  img:"📺"},
+    {pl:"Idę spać.",             en:"I go to sleep.",           hint:"EE-deh spach",                 img:"😴"},
+    {pl:"Robię zadanie domowe.", en:"I do my homework.",        hint:"ROH-byeh za-DAH-nyeh do-MOH-veh",img:"📝"},
+    {pl:"Jem obiad.",            en:"I eat lunch.",             hint:"yem OH-byad",                  img:"🍽️"},
+    {pl:"Myję ręce.",            en:"I wash my hands.",         hint:"MY-yeh REN-tseh",              img:"🧼"},
+  ],
+  // Unit 11: Question words (kto, co, gdzie, kiedy, dlaczego, jak, ile, skąd)
+  pytania: [
+    {pl:"Kto to jest?",          en:"Who is this?",             hint:"kto to yest",                  img:"🙋"},
+    {pl:"Co robisz?",            en:"What are you doing?",      hint:"tso ROH-beesh",                img:"🤔"},
+    {pl:"Gdzie mieszkasz?",      en:"Where do you live?",       hint:"gdjeh MYESH-kash",             img:"🏠"},
+    {pl:"Jak się masz?",         en:"How are you?",             hint:"yak sheh mash",                img:"😊"},
+    {pl:"Ile masz lat?",         en:"How old are you?",         hint:"EE-leh mash lat",              img:"🎂"},
+    {pl:"Kiedy masz urodziny?",  en:"When is your birthday?",   hint:"KYEH-dy mash oo-ro-JEE-ny",   img:"🎁"},
+    {pl:"Dlaczego płaczesz?",    en:"Why are you crying?",      hint:"dla-CHEH-go PWAH-chesh",       img:"😢"},
+    {pl:"Skąd jesteś?",          en:"Where are you from?",      hint:"skond YES-tesh",               img:"🌍"},
+  ],
+  // Units 12–14: Preferences + negation (nie + verb)
+  co_lubie: [
+    {pl:"Lubię koty.",           en:"I like cats.",             hint:"LOO-byeh KOH-ty",              img:"🐱"},
+    {pl:"Nie lubię deszczu.",    en:"I don't like rain.",       hint:"nyeh LOO-byeh DESH-choo",      img:"🌧️"},
+    {pl:"Wolę psy.",             en:"I prefer dogs.",           hint:"VOH-leh psy",                  img:"🐶"},
+    {pl:"Chcę lody.",            en:"I want ice cream.",        hint:"htseh LOH-dy",                 img:"🍦"},
+    {pl:"Lubię pizzę.",          en:"I like pizza.",            hint:"LOO-byeh PEETS-zeh",           img:"🍕"},
+    {pl:"Nie lubię warzyw.",     en:"I don't like vegetables.", hint:"nyeh LOO-byeh VAH-zhyv",       img:"🥦"},
+    {pl:"Lubię grać w piłkę.",   en:"I like playing football.", hint:"LOO-byeh grach f PEEW-keh",   img:"⚽"},
+    {pl:"Wolę herbatę.",         en:"I prefer tea.",            hint:"VOH-leh her-BAH-teh",          img:"🍵"},
+  ],
 };
 
 const topicLabels = {
@@ -820,11 +928,15 @@ const topicLabels = {
   adjectives: "✨ Adjectives",
   places:     "🏙️ Places",
   phrases:    "💬 Phrases",
+  moj_dzien:  "📅 Mój dzień",
+  pytania:    "❓ Pytania",
+  co_lubie:   "❤️ Co lubię",
 };
 
 const TOPIC_LEVELS = {
   1: ['greetings','numbers','colours','family','food','animals','school','clothes','weather'],
   2: ['body','adjectives','places','phrases'],
+  3: ['moj_dzien','pytania','co_lubie'],
 };
 
 const homeChallenges = {
@@ -841,6 +953,9 @@ const homeChallenges = {
   adjectives: "Walk around the house with Tata and describe things — duży, mały, gorący, zimny. Take turns finding something that matches each word!",
   places:     "On your next trip out, name every place you pass in Polish. See how many you can spot before you get home!",
   phrases:    "Use three Polish phrases with Tata today without switching to English — Chcę, Lubię, and Pomóż mi. Can you make a mini conversation?",
+  moj_dzien:  "Tell Tata what you did today using at least four sentences in Polish — Wstaję, Idę, Jem, Czytam. Can you teach Mum one sentence too?",
+  pytania:    "Ask Tata three questions in Polish — Co robisz?, Gdzie jesteś?, Jak się masz? See if he answers in Polish!",
+  co_lubie:   "Tell Tata three things you like and one thing you don't — Lubię…, Nie lubię… Teach Mum to say Lubię… and Nie lubię… too!",
 };
 
 // ── PROFILES ──────────────────────────────────────────────────────────────────
@@ -988,13 +1103,14 @@ function pickProfile(name) {
   cardIdx = 0; cardFlipped = false;
   quizPool = []; roundQNum = 0; roundXP = 0; roundRight = 0; qRight = 0; qWrong = 0;
   scramPool = []; scramRight = 0; scramWrong = 0;
+  buildPool = []; buildRight = 0; buildWrong = 0;
   matchSelected = null; matchPool = []; matchedCount = 0;
   practiceMode = false;
   document.getElementById('practiceBtn').classList.remove('on');
   document.getElementById('practiceBanner').classList.remove('show');
   document.getElementById('quizScoreRow').style.opacity  = '1';
   document.getElementById('scramScoreRow').style.opacity = '1';
-  ['flash','quiz','match','scram'].forEach(n =>
+  ['flash','quiz','match','scram','build'].forEach(n =>
     document.getElementById(n + 'Mode').classList.toggle('active', n === 'flash'));
   document.getElementById('endScreen').classList.remove('active');
   document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
@@ -1120,6 +1236,7 @@ function togglePractice() {
   document.getElementById('practiceBanner').classList.toggle('show', practiceMode);
   document.getElementById('quizScoreRow').style.opacity  = practiceMode ? '0.3' : '1';
   document.getElementById('scramScoreRow').style.opacity = practiceMode ? '0.3' : '1';
+  document.getElementById('buildScoreRow').style.opacity = practiceMode ? '0.3' : '1';
 }
 
 // ── AUDIO ─────────────────────────────────────────────────────────────────────
@@ -1378,7 +1495,7 @@ function buildTopicBar() {
   Object.entries(TOPIC_LEVELS).forEach(([level, levelTopics], levelIndex) => {
     const label = document.createElement('div');
     label.className = 'topic-level-label' + (levelIndex === 0 ? ' first' : '');
-    label.textContent = 'Level ' + level;
+    label.textContent = level === '3' ? 'Level 3 · Rozmawiam' : 'Level ' + level;
     bar.appendChild(label);
     levelTopics.forEach(t => {
       if (!vocab[t]) return;
@@ -1416,11 +1533,19 @@ function resetAll() {
     scramPool = [];
     nextScramble();
   }
+  if (currentMode === 'build') {
+    buildRight = 0; buildWrong = 0;
+    roundQNum = 0; roundXP = 0; roundRight = 0;
+    document.getElementById('bRight').textContent = 0;
+    document.getElementById('bWrong').textContent = 0;
+    buildPool = [];
+    nextBuild();
+  }
 }
 
 function setMode(m) {
   currentMode = m;
-  ['flash','quiz','match','scram'].forEach((name, i) => {
+  ['flash','quiz','match','scram','build'].forEach((name, i) => {
     document.getElementById(name + 'Mode').classList.toggle('active', name === m);
     document.querySelectorAll('.nav-btn')[i].classList.toggle('active', name === m);
   });
@@ -1603,11 +1728,13 @@ function showEndScreen() {
   }
 
   // Switch panel
-  ['flash','quiz','match','scram'].forEach(n =>
+  ['flash','quiz','match','scram','build'].forEach(n =>
     document.getElementById(n + 'Mode').classList.remove('active'));
   document.getElementById('endScreen').classList.add('active');
-  // Mark quiz nav active for context
-  document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === 1));
+  // Highlight whichever mode triggered the round
+  const _modeNames = ['flash','quiz','match','scram','build'];
+  const _modeIdx   = _modeNames.indexOf(currentMode);
+  document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === _modeIdx));
 
   // Populate
   const acc = roundRight;
@@ -1635,15 +1762,25 @@ function showEndScreen() {
 
 function playAgain() {
   document.getElementById('endScreen').classList.remove('active');
-  document.getElementById('quizMode').classList.add('active');
-  currentMode = 'quiz';
-  qRight = 0; qWrong = 0;
   roundQNum = 0; roundXP = 0; roundRight = 0;
-  document.getElementById('qRight').textContent = 0;
-  document.getElementById('qWrong').textContent = 0;
-  document.getElementById('praiseMsgQuiz').textContent = '';
-  quizPool = [];
-  nextQuiz();
+
+  if (currentMode === 'build') {
+    document.getElementById('buildMode').classList.add('active');
+    buildRight = 0; buildWrong = 0;
+    document.getElementById('bRight').textContent = 0;
+    document.getElementById('bWrong').textContent = 0;
+    buildPool = [];
+    nextBuild();
+  } else {
+    document.getElementById('quizMode').classList.add('active');
+    currentMode = 'quiz';
+    qRight = 0; qWrong = 0;
+    document.getElementById('qRight').textContent = 0;
+    document.getElementById('qWrong').textContent = 0;
+    document.getElementById('praiseMsgQuiz').textContent = '';
+    quizPool = [];
+    nextQuiz();
+  }
 }
 
 // ── MATCH ─────────────────────────────────────────────────────────────────────
@@ -1733,8 +1870,19 @@ function nextScramble() {
 
   const allWords = vocab[currentTopic];
   const eligible = allWords.filter(w => !w.pl.includes(' '));
-  const words    = eligible.length > 0 ? eligible : allWords;
 
+  // If every entry is a multi-word sentence, letter-scramble makes no sense — redirect to Build
+  if (eligible.length === 0) {
+    document.getElementById('scramPrompt').textContent = 'Try 🏗️ Build instead!';
+    document.getElementById('scramSub').textContent    = 'This topic has sentences, not single words — use Build to put them in order.';
+    document.getElementById('scramAnswer').innerHTML   = '';
+    document.getElementById('scramBank').innerHTML     = '';
+    document.getElementById('scramFeedback').textContent = '';
+    document.getElementById('scramNext').style.display = 'none';
+    return;
+  }
+
+  const words = eligible;
   if (scramPool.length === 0) scramPool = buildSrsPool(currentTopic, words);
   scramWord = scramPool.shift(); // shift() preserves due-first ordering
   computeScramTileSize([...scramWord.pl].length);
@@ -1826,6 +1974,133 @@ function checkScramble() {
     srsWrong(currentTopic, scramWord.pl);
   }
   document.getElementById('scramNext').style.display = 'block';
+}
+
+// ── BUILD (Ułóż zdanie) ───────────────────────────────────────────────────────
+// State: prefer multi-word entries; falls back to all words for single-word topics.
+let buildPool = [], buildWord = null;
+let buildWordTokens = [];   // [{word, id}] — shuffled tiles
+let buildAnswer = [];       // ordered list of ids tapped so far
+let buildAnswered = false;
+let buildRight = 0, buildWrong = 0;
+
+function nextBuild() {
+  buildAnswered = false;
+  document.getElementById('buildNext').style.display   = 'none';
+  document.getElementById('buildFeedback').textContent = '';
+  document.getElementById('buildAnswer').className     = 'build-answer';
+
+  const allWords = vocab[currentTopic];
+  // Prefer entries that have 2+ words so there's something to order
+  const eligible = allWords.filter(w => w.pl.split(' ').length >= 2);
+  const words = eligible.length > 0 ? eligible : allWords;
+
+  if (eligible.length === 0) {
+    // Topic is all single words — show a gentle message, no crash
+    document.getElementById('buildPrompt').textContent  = 'Nothing to build here!';
+    document.getElementById('buildSub').textContent     = '';
+    document.getElementById('buildAnswer').innerHTML    = '<div class="build-no-sentences">This topic has single words rather than sentences.<br>Try 🧩 Scramble to spell them letter by letter!</div>';
+    document.getElementById('buildBank').innerHTML      = '';
+    document.getElementById('buildFeedback').textContent = '';
+    document.getElementById('buildNext').style.display  = 'none';
+    return;
+  }
+
+  if (buildPool.length === 0) buildPool = buildSrsPool(currentTopic, words);
+  buildWord = buildPool.shift();
+
+  document.getElementById('buildPrompt').textContent = buildWord.en;
+  document.getElementById('buildSub').textContent    = 'Put the words in the right order';
+
+  // Tokenise on spaces; each token gets a stable id for identity tracking
+  const tokens = buildWord.pl.split(' ');
+  buildWordTokens = tokens.map((word, id) => ({ word, id }));
+  // Shuffle — ensure it's actually different from the correct order (unless only 1 token)
+  let attempts = 0;
+  do {
+    buildWordTokens = shuffle(buildWordTokens);
+    attempts++;
+  } while (attempts < 20 && tokens.length > 1 &&
+           buildWordTokens.map(t => t.word).join(' ') === buildWord.pl);
+
+  buildAnswer = [];
+  renderBuild();
+}
+
+function renderBuild() {
+  const answerDiv = document.getElementById('buildAnswer');
+  answerDiv.innerHTML = '';
+  buildAnswer.forEach((id, pos) => {
+    const slot = document.createElement('div');
+    slot.className = 'build-word-slot';
+    slot.textContent = buildWordTokens.find(t => t.id === id).word;
+    if (!buildAnswered) slot.onclick = () => removeFromBuild(pos);
+    answerDiv.appendChild(slot);
+  });
+
+  const bankDiv = document.getElementById('buildBank');
+  bankDiv.innerHTML = '';
+  buildWordTokens.forEach(item => {
+    const tile = document.createElement('div');
+    tile.className = 'build-tile' + (buildAnswer.includes(item.id) ? ' used' : '');
+    tile.textContent = item.word;
+    tile.onclick = () => addToBuild(item.id);
+    bankDiv.appendChild(tile);
+  });
+}
+
+function addToBuild(id) {
+  if (buildAnswered || buildAnswer.includes(id)) return;
+  buildAnswer.push(id);
+  renderBuild();
+  if (buildAnswer.length === buildWordTokens.length) checkBuild();
+}
+
+function removeFromBuild(pos) {
+  if (buildAnswered) return;
+  buildAnswer.splice(pos, 1);
+  renderBuild();
+}
+
+function checkBuild() {
+  buildAnswered = true;
+  const typed   = buildAnswer.map(id => buildWordTokens.find(t => t.id === id).word).join(' ');
+  const correct = typed === buildWord.pl;
+
+  const answerDiv = document.getElementById('buildAnswer');
+  answerDiv.className = 'build-answer ' + (correct ? 'correct' : 'wrong-col');
+
+  const fb = document.getElementById('buildFeedback');
+  if (correct) {
+    fb.textContent = praiseCorrect[praiseIdx % praiseCorrect.length];
+    praiseIdx++;
+    fb.style.color = calmMode ? '#6fa898' : '#27ae60';
+    buildRight++;
+    document.getElementById('bRight').textContent = buildRight;
+    roundRight++;
+    roundQNum++;
+    awardXP(10, answerDiv);
+    if (!calmMode) answerDiv.classList.add('bounce');
+    srsCorrect(currentTopic, buildWord.pl);
+    speakPolish(buildWord.pl);
+  } else {
+    fb.textContent = '✗  ' + buildWord.pl;
+    fb.style.color = calmMode ? '#b5786a' : '#e74c3c';
+    buildWrong++;
+    document.getElementById('bWrong').textContent = buildWrong;
+    roundQNum++;
+    recordWrongWord(currentTopic, buildWord.pl);
+    srsWrong(currentTopic, buildWord.pl);
+  }
+
+  document.getElementById('buildNext').style.display = 'block';
+  document.getElementById('buildNext').textContent   =
+    roundQNum >= ROUND_SIZE ? 'See results! 🎉' : 'Next sentence →';
+}
+
+function buildHandleNext() {
+  if (roundQNum >= ROUND_SIZE) showEndScreen();
+  else nextBuild();
 }
 
 // ── START ─────────────────────────────────────────────────────────────────────
